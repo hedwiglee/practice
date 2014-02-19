@@ -112,15 +112,15 @@ public class Main extends Activity {
 			System.out.println("init camera 2nd if");
 			try {
 				Camera.Parameters parameters=camera.getParameters();
-				//设置预览照片大小
-				parameters.setPreviewSize(screenWidth, screenHeight);
 				System.out.println(screenWidth+" "+screenHeight);
 				//设置每秒显示帧数的最大和最小值
 				parameters.setPreviewFpsRange(4, 10);
 				parameters.setPictureFormat(ImageFormat.JPEG);
 				parameters.set("jpeg-quality", 85);
-				parameters.setPictureSize(screenWidth, screenHeight);		
-								
+				//设置预览照片大小
+				parameters.setPreviewSize(480, 320);
+				parameters.setPictureSize(2560, 1920);	
+				
 				//通过surfaceview显示取景画面
 				camera.setPreviewDisplay(sHolder);
 				camera.startPreview();
@@ -131,7 +131,40 @@ public class Main extends Activity {
 			isPreview=true;
 		}
 	}
+		
+    private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
+        final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio = (double) w / h;
+        if (sizes == null) return null;
 
+        Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        // Try to find an size match aspect ratio and size
+        for (Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        // Cannot find the one match the aspect ratio, ignore the requirement
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+        return optimalSize;
+    }
+    
 	public void capture(View source){
 		System.out.println("enter capture()");
 		if (camera!=null){
@@ -177,7 +210,7 @@ public class Main extends Activity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
-					File file=new File(Environment.getExternalStorageDirectory(),photoname.getText().toString()+".jpg");
+					File file=new File(Environment.getExternalStorageDirectory()+"/practicephoto",photoname.getText().toString()+".jpg");
 					FileOutputStream outStream=null;
 					try {
 						outStream=new FileOutputStream(file);
