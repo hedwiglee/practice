@@ -3,37 +3,46 @@ package com.practice;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
-
-import javax.security.auth.callback.Callback;
-
+import java.util.Locale;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
-//import android.graphics.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract.CommonDataKinds.Event;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
+import android.view.OrientationEventListener;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 
-public class Main extends Activity {
+public class Main extends Activity implements SensorEventListener{
 
 	SurfaceView sView;
 	SurfaceHolder sHolder;
@@ -42,10 +51,28 @@ public class Main extends Activity {
 	Camera camera;
 	//是否在预览中
 	boolean isPreview=false;
+	int mOrientation=0;
+	SensorManager mSensorManager;	
+	SensorEventListener mSensorEventListener;
+	//代表手机分别朝向上、右、下、左
+	int ORIENTATION_UP=1;
+	int ORIENTATION_RIGHT=2;
+	int ORIENTATION_DOWN=3;
+	int ORIENTATION_LEFT=4;
+	//四个方向放置手机时，拍出图片需要旋转的角度
+	int ROTATE_UP=90;
+	int ROTATE_RIGHT=0;
+	int ROTATE_DOWN=270;
+	int ROTATE_LEFT=180;
+	//手机方向
+	int mobileOrientation=0;
+	//手机旋转角度
+	int mobileRotate=0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mSensorManager=(SensorManager)getSystemService(SENSOR_SERVICE);
 		//设置全屏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -92,6 +119,34 @@ public class Main extends Activity {
 		});
 	}
 	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub		
+	}	
+	
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		// TODO Auto-generated method stub
+		float[] values=event.values;
+		int sensorType=event.sensor.getType();
+		if (Math.abs(values[1])>=45&&Math.abs(values[1])<=135) {
+			if (values[1]<0) {
+				mobileOrientation=ORIENTATION_UP;
+			}
+			else {
+				mobileOrientation=ORIENTATION_DOWN;
+			}
+		}
+		else {
+			if (values[2]<0) {
+				mobileOrientation=ORIENTATION_LEFT;
+			}
+			else {
+				mobileOrientation=ORIENTATION_RIGHT;
+			}
+		}
+	}
+			
 	private void initCamera(){
 		System.out.println("enter initCamera()");
 		if (!isPreview){
@@ -131,40 +186,30 @@ public class Main extends Activity {
 			isPreview=true;
 		}
 	}
+	
+	public static Bitmap rotate(Bitmap b, int degrees) {
+		if(degrees==0){
+			return b;
+		}
+		if (degrees != 0 && b != null) {
+			Matrix m = new Matrix();
+			m.setRotate(degrees, (float) b.getWidth() ,
+			(float) b.getHeight() );
+			try {
+				Bitmap b2 = Bitmap.createBitmap(b, 0, 0, b.getWidth(),
+				b.getHeight(), m, true);
+				if (b != b2) {
+				b.recycle(); // Android开发网再次提示Bitmap操作完应该显示的释放
+				b = b2;
+				}
+			} 
+			catch (OutOfMemoryError ex) {
+			// Android123建议大家如何出现了内存不足异常，最好return 原始的bitmap对象。.
+			}
+		}
+		return b;
+	}
 		
-    private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
-        final double ASPECT_TOLERANCE = 0.1;
-        double targetRatio = (double) w / h;
-        if (sizes == null) return null;
-
-        Size optimalSize = null;
-        double minDiff = Double.MAX_VALUE;
-
-        int targetHeight = h;
-
-        // Try to find an size match aspect ratio and size
-        for (Size size : sizes) {
-            double ratio = (double) size.width / size.height;
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
-            if (Math.abs(size.height - targetHeight) < minDiff) {
-                optimalSize = size;
-                minDiff = Math.abs(size.height - targetHeight);
-            }
-        }
-
-        // Cannot find the one match the aspect ratio, ignore the requirement
-        if (optimalSize == null) {
-            minDiff = Double.MAX_VALUE;
-            for (Size size : sizes) {
-                if (Math.abs(size.height - targetHeight) < minDiff) {
-                    optimalSize = size;
-                    minDiff = Math.abs(size.height - targetHeight);
-                }
-            }
-        }
-        return optimalSize;
-    }
-    
 	public void capture(View source){
 		System.out.println("enter capture()");
 		if (camera!=null){
@@ -201,21 +246,49 @@ public class Main extends Activity {
 			// TODO Auto-generated method stub
 			//根据所拍数据创建位图
 			final Bitmap bm=BitmapFactory.decodeByteArray(data, 0, data.length);
+			switch (mobileOrientation) {
+			case 1:
+				mobileRotate=ROTATE_UP;
+				break;
+			case 2:
+				mobileRotate=ROTATE_RIGHT;
+				break;
+			case 3:
+				mobileRotate=ROTATE_DOWN;
+				break;
+			case 4:
+				mobileRotate=ROTATE_LEFT;
+				break;
+			default:
+				break;
+			}
+			final Bitmap bmRotate=rotate(bm, mobileRotate);
 			View saveDialog=getLayoutInflater().inflate(R.layout.save, null);
-			final EditText photoname=(EditText)saveDialog.findViewById(R.id.phone_name);
-			ImageView show=(ImageView)saveDialog.findViewById(R.id.show);
-			show.setImageBitmap(bm);
+			//用时间为图片命名
+			final String picname = DateFormat.format("yyyyMMdd_hhmmss",Calendar.getInstance(Locale.CHINA)) + ".jpg";
 			new AlertDialog.Builder(Main.this).setView(saveDialog)
 					.setPositiveButton("保存", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
-					File file=new File(Environment.getExternalStorageDirectory()+"/practicephoto",photoname.getText().toString()+".jpg");
+					String path=Environment.getExternalStorageDirectory().toString();
+					File filepath=new File(path+"/CameraPractice");
+					if (!filepath.exists()){
+						filepath.mkdir();
+					}
+					File file=new File(filepath,picname);
 					FileOutputStream outStream=null;
 					try {
 						outStream=new FileOutputStream(file);
-						bm.compress(CompressFormat.JPEG, 100, outStream);
+						bmRotate.compress(CompressFormat.JPEG, 100, outStream);
 						outStream.close();
+						//启动新activity
+		    			Intent intent = new Intent();
+		    			intent.setClass(Main.this, PicDetail.class);
+		    	        Bundle bundle = new Bundle();
+		    	        bundle.putString("picPath", file.getPath());
+		    	        intent.putExtra("picPath",file.getPath());
+		    			startActivity(intent);
 					}
 					catch (IOException e){
 						e.printStackTrace();
@@ -227,4 +300,23 @@ public class Main extends Activity {
 			isPreview=true;
 		}
 	};
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSensorManager.registerListener(this, 
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_NORMAL);
+	}
+	
+	@Override
+	protected void onPause() {
+		mSensorManager.unregisterListener(this);
+		super.onPause();
+	}
+	
+	@Override
+	protected void onStop() {
+		mSensorManager.unregisterListener(this);
+		super.onStop();
+	}
 }
