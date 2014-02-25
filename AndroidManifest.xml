@@ -35,6 +35,10 @@
             android:name="com.practice.PicDetail"
             android:label="@string/title_activity_pic_detail" >
         </activity>
+        <activity
+            android:name="com.practice.PhotoList"
+            android:label="@string/title_activity_photo_list" >
+        </activity>
     </application>
 
 </manifest>

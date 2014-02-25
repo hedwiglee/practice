@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,27 +18,20 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
-import android.hardware.Camera.Size;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
-import android.view.OrientationEventListener;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 public class Main extends Activity implements SensorEventListener{
 
@@ -76,47 +67,54 @@ public class Main extends Activity implements SensorEventListener{
 		//设置全屏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.main);
-		//获取窗口管理器
-		WindowManager vm=getWindowManager();
-		Display display=vm.getDefaultDisplay();
-		DisplayMetrics metrics=new DisplayMetrics();
-		//获取屏幕宽高
-		display.getMetrics(metrics);
-		screenWidth=metrics.widthPixels;
-		screenHeight=metrics.heightPixels;
-		//获取surface组件
-		sView=(SurfaceView)findViewById(R.id.sView);
-		//surface无需自己维护缓冲区
-		sView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		//获取surfaceview的surfaceholder
-		sHolder=sView.getHolder();
-		System.out.println("get sHolder");
-		//为sHolder添加一个回调监听器
-		sHolder.addCallback(new SurfaceHolder.Callback()
-		{
-			@Override
-			public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
-				System.out.println("surface changed");
-			}
-			@Override
-			public void surfaceCreated(SurfaceHolder surfaceholder){
-				System.out.println("surface created");
-				initCamera();
-				System.out.println("init camera!");
-			}
-			@Override
-			public void surfaceDestroyed(SurfaceHolder surfaceholder){
-				//如果camera不为null，释放摄像头
-				if (camera!=null)
-				{
-					if (isPreview) 
-						camera.stopPreview();
-					camera.release();
-					camera=null;					
+		setContentView(R.layout.main);		
+
+		new cameraThread().start();
+	}
+	
+	public class cameraThread extends Thread {
+		public void run() {
+			//获取窗口管理器
+			WindowManager vm=getWindowManager();
+			Display display=vm.getDefaultDisplay();
+			DisplayMetrics metrics=new DisplayMetrics();
+			//获取屏幕宽高
+			display.getMetrics(metrics);
+			screenWidth=metrics.widthPixels;
+			screenHeight=metrics.heightPixels;
+			//获取surface组件
+			sView=(SurfaceView)findViewById(R.id.sView);
+			//surface无需自己维护缓冲区
+			sView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+			//获取surfaceview的surfaceholder
+			sHolder=sView.getHolder();
+			System.out.println("get sHolder");
+			//为sHolder添加一个回调监听器
+			sHolder.addCallback(new SurfaceHolder.Callback()
+			{
+				@Override
+				public void surfaceChanged(SurfaceHolder holder,int format,int width,int height){
+					System.out.println("surface changed");
 				}
-			}
-		});
+				@Override
+				public void surfaceCreated(SurfaceHolder surfaceholder){
+					System.out.println("surface created");
+					initCamera();
+					System.out.println("init camera!");
+				}
+				@Override
+				public void surfaceDestroyed(SurfaceHolder surfaceholder){
+					//如果camera不为null，释放摄像头
+					if (camera!=null)
+					{
+						if (isPreview) 
+							camera.stopPreview();
+						camera.release();
+						camera=null;					
+					}
+				}
+			});
+		}
 	}
 	
 	@Override
@@ -128,7 +126,6 @@ public class Main extends Activity implements SensorEventListener{
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
 		float[] values=event.values;
-		int sensorType=event.sensor.getType();
 		if (Math.abs(values[1])>=45&&Math.abs(values[1])<=135) {
 			if (values[1]<0) {
 				mobileOrientation=ORIENTATION_UP;
@@ -174,7 +171,7 @@ public class Main extends Activity implements SensorEventListener{
 				parameters.set("jpeg-quality", 85);
 				//设置预览照片大小
 				parameters.setPreviewSize(480, 320);
-				parameters.setPictureSize(2560, 1920);	
+				parameters.setPictureSize(1280, 960);	
 				
 				//通过surfaceview显示取景画面
 				camera.setPreviewDisplay(sHolder);
@@ -224,16 +221,13 @@ public class Main extends Activity implements SensorEventListener{
 		public void onAutoFocus(boolean success, Camera camera) {
 			// TODO Auto-generated method stub
 			if (success){
-				camera.takePicture(new ShutterCallback() {
-					
+				camera.takePicture(new ShutterCallback() {					
 					@Override
 					public void onShutter() {
-						// TODO Auto-generated method stub
-						
+						// TODO Auto-generated method stub						
 					}
 				}, new PictureCallback(){
-					public void onPictureTaken(byte[] data,Camera c) {
-						
+					public void onPictureTaken(byte[] data,Camera c) {						
 					}
 				}, myJpegCallback);
 			}
@@ -281,7 +275,7 @@ public class Main extends Activity implements SensorEventListener{
 					try {
 						outStream=new FileOutputStream(file);
 						bmRotate.compress(CompressFormat.JPEG, 100, outStream);
-						outStream.close();
+						outStream.close();						
 						//启动新activity
 		    			Intent intent = new Intent();
 		    			intent.setClass(Main.this, PicDetail.class);
