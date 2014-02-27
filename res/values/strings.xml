@@ -3,11 +3,11 @@
 
     <string name="app_name">practice</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="photo_name">照片名称</string>
     <string name="title_activity_pic_detail">添加详情</string>
     <string name="save_btn">保存</string>
     <string name="description_title">添加描述</string>
     <string name="title_activity_photo_list">PhotoList</string>
+    <string name="title_activity_map_main">MapMain</string>
 
 </resources>

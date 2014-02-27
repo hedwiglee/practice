@@ -33,7 +33,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class Main extends Activity implements SensorEventListener{
+public class TakePhoto extends Activity implements SensorEventListener{
 
 	SurfaceView sView;
 	SurfaceHolder sHolder;
@@ -67,7 +67,7 @@ public class Main extends Activity implements SensorEventListener{
 		//设置全屏
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.main);		
+		setContentView(R.layout.take_photo);		
 
 		new cameraThread().start();
 	}
@@ -260,7 +260,7 @@ public class Main extends Activity implements SensorEventListener{
 			View saveDialog=getLayoutInflater().inflate(R.layout.save, null);
 			//用时间为图片命名
 			final String picname = DateFormat.format("yyyyMMdd_hhmmss",Calendar.getInstance(Locale.CHINA)) + ".jpg";
-			new AlertDialog.Builder(Main.this).setView(saveDialog)
+			new AlertDialog.Builder(TakePhoto.this).setView(saveDialog)
 					.setPositiveButton("保存", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -278,7 +278,7 @@ public class Main extends Activity implements SensorEventListener{
 						outStream.close();						
 						//启动新activity
 		    			Intent intent = new Intent();
-		    			intent.setClass(Main.this, PicDetail.class);
+		    			intent.setClass(TakePhoto.this, PicDetail.class);
 		    	        Bundle bundle = new Bundle();
 		    	        bundle.putString("picPath", file.getPath());
 		    	        intent.putExtra("picPath",file.getPath());
