@@ -33,6 +33,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+/*
+ * 拍照界面
+ * */
 public class TakePhoto extends Activity implements SensorEventListener{
 
 	SurfaceView sView;

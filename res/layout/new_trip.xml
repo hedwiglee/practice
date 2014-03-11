@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".NewTrip" >
+
+    <TextView
+        android:id="@+id/newtrip_tripname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/string_newtrip_tripname" />
+
+    <EditText
+        android:id="@+id/newtrip_tripname_plain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_tripname_text"
+        android:layout_marginTop="20dp"
+        android:ems="10" />
+        <requestFocus />
+
+    <TextView
+        android:id="@+id/newtrip_starttime_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_tripname_plain"
+        android:layout_marginTop="20dp"
+        android:text="@string/string_newtrip_starttime" />
+
+    <EditText
+        android:id="@+id/newtrip_starttime_plain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_starttime_text"
+        android:layout_marginTop="20dp"
+        android:ems="10" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/newtrip_endtime_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_starttime_plain"
+        android:layout_marginTop="20dp"
+        android:text="@string/string_newtrip_endtime" />
+
+    <EditText
+        android:id="@+id/newtrip_endtime_plain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_endtime_text"
+        android:layout_marginTop="20dp"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/newtrip_keywords_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_endtime_plain"
+        android:layout_marginTop="20dp"
+        android:text="@string/string_newtrip_keywords" />
+
+    <EditText
+        android:id="@+id/newtrip_keywords_plain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_tripname_text"
+        android:layout_below="@+id/newtrip_keywords_text"
+        android:layout_marginTop="20dp"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/newtrip_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newtrip_keywords_plain"
+        android:layout_alignParentBottom="true"
+        android:text="@string/save_btn" />
+
+</RelativeLayout>

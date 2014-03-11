@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+/*
+ * 为所拍摄的照片添加详情
+ * */
 public class PicDetail extends Activity {
 
 	private ImageView photoview;
@@ -48,14 +51,14 @@ public class PicDetail extends Activity {
 	    			startActivity(intent);
 				}
 				catch(SQLException e) {
-					db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id,photo_time date," +
+					db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+								"photo_time date," +
 								"pic_description varchar(255),photo_keyword varchar(255),photo_place varchar(100)," +
 								"photo_path varchar(150))");
 					insertData(db, description, photoname);
 				}
 			}
-		});
-        
+		});        
 	}	
 
 	private void insertData(SQLiteDatabase db,String description,String path){
