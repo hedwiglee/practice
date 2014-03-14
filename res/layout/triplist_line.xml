@@ -25,19 +25,37 @@
         android:text="厦门行" />
 
     <TextView
-        android:id="@+id/triplist_time_text"
+        android:id="@+id/triplist_starttime_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/triplist_title_text"
         android:layout_below="@+id/triplist_title_text"
-        android:text="2014.1.1-2014.1.12" />
+        android:text="2014.1.1" />
 
+    <TextView
+        android:id="@+id/triplist_timeline_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/triplist_starttime_text"
+        android:layout_alignBottom="@+id/triplist_starttime_text"
+        android:layout_toRightOf="@+id/triplist_starttime_text"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/triplist_endtime_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/triplist_starttime_text"
+        android:layout_alignBottom="@+id/triplist_starttime_text"
+        android:layout_toRightOf="@+id/triplist_timeline_text"
+        android:text="2014.1.12" />
+    
     <TextView
         android:id="@+id/triplist_keyword_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/triplist_time_text"
-        android:layout_below="@+id/triplist_time_text"
+        android:layout_alignLeft="@+id/triplist_starttime_text"
+        android:layout_below="@+id/triplist_starttime_text"
         android:text="山 寺庙 小巷" />
 
 </RelativeLayout>

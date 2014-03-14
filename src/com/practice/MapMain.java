@@ -32,11 +32,8 @@ public class MapMain extends Activity {
 		mBMapMan=new BMapManager(getApplication());
 		mBMapMan.init("crC3IFDwWPU7K44QphzZmWoN", null);  
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
-		System.out.println("111");
 		setContentView(R.layout.map_main);
-		System.out.println("222");
 		mMapView=(MapView)findViewById(R.id.bmapsView);
-		System.out.println("33");
 		mMapView.setBuiltInZoomControls(true);
 		//设置启用内置的缩放控件
 		MapController mMapController=mMapView.getController();

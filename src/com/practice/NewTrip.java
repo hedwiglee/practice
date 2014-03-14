@@ -32,19 +32,17 @@ public class NewTrip extends Activity {
 		if (!filepath.exists()){
 			filepath.mkdir();
 		}
-		db=SQLiteDatabase.openOrCreateDatabase(filepath+"/photolist.db3", null);
+		db=SQLiteDatabase.openOrCreateDatabase(filepath+"/travelbook.db3", null);
 		
 		saveButton.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				System.out.println("click");
 				String tripname=((EditText)findViewById(R.id.newtrip_tripname_plain)).getText().toString();
 				String tripstart=((EditText)findViewById(R.id.newtrip_starttime_plain)).getText().toString();
 				String tripend=((EditText)findViewById(R.id.newtrip_endtime_plain)).getText().toString();
 				String tripkey=((EditText)findViewById(R.id.newtrip_keywords_plain)).getText().toString();
 				try {
-					System.out.println("enter try");
 					db.execSQL("insert into trip_list(trip_name,start_time,end_time,keyword,is_over) " +
 							"values (?,?,?,?,0)",new String[] {tripname,tripstart,tripend,tripkey});
 				}
@@ -56,11 +54,12 @@ public class NewTrip extends Activity {
 					db.execSQL("insert into trip_list(trip_name,start_time,end_time,keywords,is_over) " +
 							"values (?,?,?,?,0)",new String[] {tripname,tripstart,tripend,tripkey});
 				}
-
+				
 				//启动新activity
     			Intent intent = new Intent();
     			intent.setClass(NewTrip.this, MapMain.class);
     			startActivity(intent);
+    			
 			}
 		});
 	}

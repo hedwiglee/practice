@@ -1,8 +1,12 @@
 package com.practice;
 
+import java.io.File;
+
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -36,7 +40,11 @@ public class PicDetail extends Activity {
         Bitmap bm = BitmapFactory.decodeFile(photoname, options);
         photoview.setImageBitmap(bm);
         //数据库操作
-        db=SQLiteDatabase.openOrCreateDatabase(this.getFilesDir().toString()+"/photolist.db3", null);
+        File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
+		if (!filepath.exists()){
+			filepath.mkdir();
+		}
+		db=SQLiteDatabase.openOrCreateDatabase(filepath+"/travelbook.db3", null);
 		saveBtn=(Button)findViewById(R.id.save_detail);
 		saveBtn.setOnClickListener(new OnClickListener() {			
 			@Override

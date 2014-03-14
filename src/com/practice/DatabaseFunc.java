@@ -26,9 +26,12 @@ public class DatabaseFunc {
 	//填充listview
 	public void inflateList(Cursor cursor,Context context,int layoutInt,String[] name,int[] id,ListView list) {
 		//填充simpleCursorAdapter
-		SimpleCursorAdapter adapter=new SimpleCursorAdapter(context, layoutInt, cursor, name,id,
+		System.out.println("enter inflatelist");
+		SimpleCursorAdapter adapter=new SimpleCursorAdapter(context, layoutInt, cursor, name, id,
 								CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+		System.out.println("new adapter");
 		//显示数据
 		list.setAdapter(adapter);
+		System.out.println("set adapter");
 	}
 }
