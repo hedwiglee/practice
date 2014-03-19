@@ -67,7 +67,7 @@ public class MapMain extends Activity {
 			}
 		});
 		
-		//点击游记按钮，跳转到TripList界面
+		//点击游记按钮，跳转到NewTrip界面
 		newTripButton=(Button)findViewById(R.id.new_trip_btn);
 		newTripButton.setOnClickListener(new OnClickListener() {			
 			@Override

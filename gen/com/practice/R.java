@@ -52,8 +52,8 @@ public final class R {
         public static final int trip_list_view=0x7f080017;
         public static final int triplist_endtime_text=0x7f08001c;
         public static final int triplist_keyword_text=0x7f08001d;
+        public static final int triplist_line_text=0x7f08001b;
         public static final int triplist_starttime_text=0x7f08001a;
-        public static final int triplist_timeline_text=0x7f08001b;
         public static final int triplist_title_text=0x7f080019;
     }
     public static final class layout {

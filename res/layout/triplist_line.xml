@@ -31,9 +31,8 @@
         android:layout_alignLeft="@+id/triplist_title_text"
         android:layout_below="@+id/triplist_title_text"
         android:text="2014.1.1" />
-
     <TextView
-        android:id="@+id/triplist_timeline_text"
+        android:id="@+id/triplist_line_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/triplist_starttime_text"
@@ -45,10 +44,9 @@
         android:id="@+id/triplist_endtime_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/triplist_starttime_text"
         android:layout_alignBottom="@+id/triplist_starttime_text"
-        android:layout_toRightOf="@+id/triplist_timeline_text"
-        android:text="2014.1.12" />
+        android:layout_toRightOf="@+id/triplist_line_text"
+        android:text="2014.1.1" />
     
     <TextView
         android:id="@+id/triplist_keyword_text"
