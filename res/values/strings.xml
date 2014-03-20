@@ -20,5 +20,7 @@
     <string name="string_newtrip_starttime">开始时间</string>
     <string name="string_newtrip_endtime">结束时间</string>
     <string name="string_newtrip_keywords">关键词</string>
+    <string name="title_activity_trip_show">旅程详情</string>
+    <string name="string_end_trip">结束旅程</string>
 
 </resources>

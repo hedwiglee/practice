@@ -99,6 +99,10 @@
             android:name="com.practice.NewTrip"
             android:label="@string/title_activity_new_trip" >
         </activity>
+        <activity
+            android:name="com.practice.TripShow"
+            android:label="@string/title_activity_trip_show" >
+        </activity>
     </application>
 
 </manifest>

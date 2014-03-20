@@ -2,13 +2,20 @@ package com.practice;
 
 import java.io.File;
 
+import android.R.string;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 /*
@@ -17,8 +24,10 @@ import android.widget.ListView;
 public class TripList extends Activity {
 	SQLiteDatabase db;
 	ListView list;
+	TextView tripnameText;
 	DatabaseFunc dbaseFunc;
 	Cursor cursor;
+	static public String tripName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +52,30 @@ public class TripList extends Activity {
 			cursor=db.rawQuery("select * from trip_list", null);
 		}
 		System.out.println(cursor.getCount());
-		String[] title={"trip_name","keyword"};
-		int[] r_id={R.id.triplist_title_text,R.id.triplist_keyword_text};
+		String[] title={"_id","trip_name","keyword"};
+		int[] r_id={R.id.triplist_id_hidden,R.id.triplist_title_text,R.id.triplist_keyword_text};
 		/*dbaseFunc=new DatabaseFunc();
 		dbaseFunc.inflateList(cursor, PhotoList.this, R.layout.line, title, r_id, list);*/
 		SimpleCursorAdapter adapter=new SimpleCursorAdapter(TripList.this, R.layout.triplist_line, cursor, title, r_id,
 				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		list.setAdapter(adapter);
+		
+		//ListView的点击事件
+		list.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+				Intent intent = new Intent();
+    			intent.setClass(TripList.this, TripShow.class);
+    			Bundle bundle = new Bundle();
+    			//tripnameText=(TextView)findViewById(R.id.triplist_id_hidden);
+    			tripnameText=(TextView)list.getChildAt(position).findViewById(R.id.triplist_id_hidden);
+    			tripName=tripnameText.getText().toString();
+    			System.out.println("triplist.java tripname:"+tripName);
+    	        bundle.putString("tripName", tripName);
+    	        intent.putExtra("tripName",tripName);
+    	        tripName=null;
+    			startActivity(intent);
+			}
+		});
 	}
 
 	@Override
