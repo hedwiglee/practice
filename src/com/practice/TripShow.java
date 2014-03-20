@@ -18,9 +18,11 @@ import android.widget.TextView;
 public class TripShow extends Activity {
 	Button endTripButton;
 	TextView tripNameTextView;
+	TextView tripoverTextView;
 	String tripname;
 	SQLiteDatabase db;
 	Cursor cursor;
+	Cursor isoverCursor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +41,14 @@ public class TripShow extends Activity {
 		db=SQLiteDatabase.openOrCreateDatabase(filepath+"/travelbook.db3", null);
 		
 		try {
-			cursor=db.rawQuery("select * from trip_list where _id='"+tripname+"'", null);
+			cursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
 		}
 		catch (Exception e) {
 			db.execSQL("create table trip_list(_id integer primary key autoincrement,trip_name varchar(40)," +
 					"start_time date,end_time date," +
 					"user_id varchar(20),participate varchar(100),thumbnail_photo varchar(100)," +
 					"keyword varchar(255),photo_nums integer,trip_location varchar(100),is_over integer)");
-			cursor=db.rawQuery("select * from trip_list where _id='"+tripname+"'", null);
+			cursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
 		}
 		
 		//获取该_id对应的旅程名称，并写到textview
@@ -54,15 +56,22 @@ public class TripShow extends Activity {
 		String valueString=cursor.getString(cursor.getColumnIndex("trip_name"));
 		tripNameTextView=(TextView)findViewById(R.id.tripshow_travelname);
 		tripNameTextView.setText(valueString.toCharArray(), 0, valueString.length());
-		
+		String isoverString=cursor.getString(cursor.getColumnIndex("is_over"));
+		tripoverTextView=(TextView)findViewById(R.id.tripshow_isover_text);
+		tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());		
 		
 		endTripButton=(Button)findViewById(R.id.end_trip_btn);
-		endTripButton.setOnClickListener(new OnClickListener() {
-			
+		endTripButton.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+				db.execSQL("update trip_list set is_over=1 where _id="+tripname);
+				isoverCursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
+				isoverCursor.moveToFirst();
+				String isoverString=isoverCursor.getString(isoverCursor.getColumnIndex("is_over"));
+				System.out.println("isover:"+isoverString);
+				tripoverTextView=(TextView)findViewById(R.id.tripshow_isover_text);
+				tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());
 			}
 		});
 	}	

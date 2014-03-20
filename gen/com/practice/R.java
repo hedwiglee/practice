@@ -24,7 +24,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080021;
+        public static final int action_settings=0x7f080022;
         public static final int bmapsView=0x7f080002;
         public static final int description_textview=0x7f080012;
         public static final int end_trip_btn=0x7f080019;
@@ -48,15 +48,16 @@ public final class R {
         public static final int take_photo_btn=0x7f080006;
         public static final int take_picture=0x7f080016;
         public static final int thumbnail=0x7f080011;
-        public static final int thumbnail_image=0x7f08001a;
+        public static final int thumbnail_image=0x7f08001b;
         public static final int to_trip_list_btn=0x7f080003;
         public static final int trip_list_view=0x7f080017;
-        public static final int triplist_endtime_text=0x7f08001e;
-        public static final int triplist_id_hidden=0x7f080020;
-        public static final int triplist_keyword_text=0x7f08001f;
-        public static final int triplist_line_text=0x7f08001d;
-        public static final int triplist_starttime_text=0x7f08001c;
-        public static final int triplist_title_text=0x7f08001b;
+        public static final int triplist_endtime_text=0x7f08001f;
+        public static final int triplist_id_hidden=0x7f080021;
+        public static final int triplist_keyword_text=0x7f080020;
+        public static final int triplist_line_text=0x7f08001e;
+        public static final int triplist_starttime_text=0x7f08001d;
+        public static final int triplist_title_text=0x7f08001c;
+        public static final int tripshow_isover_text=0x7f08001a;
         public static final int tripshow_travelname=0x7f080018;
     }
     public static final class layout {
