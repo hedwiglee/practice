@@ -70,7 +70,7 @@ public class PicDetail extends Activity {
 	}	
 
 	private void insertData(SQLiteDatabase db,String description,String path){
-		db.execSQL("insert into pic_info values (null,100001,null,?,null,null,?)",new String[] {description,path});
+		db.execSQL("insert into pic_info values (null,1,null,?,null,null,?)",new String[] {description,path});
 	}
 	
 	@Override

@@ -103,6 +103,10 @@
             android:name="com.practice.TripShow"
             android:label="@string/title_activity_trip_show" >
         </activity>
+        <activity
+            android:name="com.practice.Test"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

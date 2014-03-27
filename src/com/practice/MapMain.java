@@ -6,8 +6,8 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.app.Activity;
 import android.content.Intent;
@@ -41,43 +41,7 @@ public class MapMain extends Activity {
 		GeoPoint point =new GeoPoint((int)(39.915* 1E6),(int)(116.404* 1E6));
 		//用给定的经纬度构造一个GeoPoint，单位是微度 (度 * 1E6)
 		mMapController.setCenter(point);//设置地图中心点
-		mMapController.setZoom(12);//设置地图zoom级别
-		
-		//点击拍照按钮，跳转到TakePhoto界面
-		photoBtn=(Button)findViewById(R.id.take_photo_btn);
-		photoBtn.setOnClickListener(new OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-    			intent.setClass(MapMain.this, TakePhoto.class);
-    			startActivity(intent);
-			}
-		});
-		
-		//点击游记按钮，跳转到TripList界面
-		tripListBtn=(Button)findViewById(R.id.to_trip_list_btn);
-		tripListBtn.setOnClickListener(new OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-    			intent.setClass(MapMain.this, TripList.class);
-    			startActivity(intent);
-			}
-		});
-		
-		//点击游记按钮，跳转到NewTrip界面
-		newTripButton=(Button)findViewById(R.id.new_trip_btn);
-		newTripButton.setOnClickListener(new OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-    			intent.setClass(MapMain.this, NewTrip.class);
-    			startActivity(intent);
-			}
-		});
+		mMapController.setZoom(12);//设置地图zoom级别		
 	}
 
 	@Override
@@ -104,5 +68,33 @@ public class MapMain extends Activity {
 	                mBMapMan.start();
 	        }
 	       super.onResume();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.map_main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem mi) {
+		if (mi.isCheckable()) {
+			mi.setChecked(true);
+		}
+		switch (mi.getItemId()) {
+		case R.id.action_camera:
+			Intent intent_camera = new Intent();
+			intent_camera.setClass(MapMain.this, TakePhoto.class);
+			startActivity(intent_camera);			
+			break;
+		case R.id.action_new:
+			Intent intent_new = new Intent();
+			intent_new.setClass(MapMain.this, NewTrip.class);
+			startActivity(intent_new);
+		default:
+			break;
+		}
+		return true;
 	}
 }

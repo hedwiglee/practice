@@ -8,41 +8,4 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:clickable="true" />
-
-            <Button
-                android:id="@+id/to_trip_list_btn"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_alignTop="@+id/new_trip_btn"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="17dp"
-                android:text="@string/to_trip_list" />
-
-            <Button
-                android:id="@+id/new_trip_btn"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:text="@string/to_new_trip" />
-
-            <Button
-                android:id="@+id/setting_btn"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_alignTop="@+id/new_trip_btn"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="17dp"
-                android:text="@string/to_setting_btn" />
-
-            <Button
-                android:id="@+id/take_photo_btn"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:text="@string/take_photo" />
 </RelativeLayout>

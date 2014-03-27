@@ -22,5 +22,9 @@
     <string name="string_newtrip_keywords">关键词</string>
     <string name="title_activity_trip_show">旅程详情</string>
     <string name="string_end_trip">结束旅程</string>
+    <string name="title_activity_test">Test</string>
+    <string name="menu_btn_search">搜索</string>
+    <string name="menu_btn_new">新建</string>
+    <string name="menu_btn_camera">拍照</string>
 
 </resources>
