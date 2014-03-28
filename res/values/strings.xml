@@ -26,5 +26,11 @@
     <string name="menu_btn_search">搜索</string>
     <string name="menu_btn_new">新建</string>
     <string name="menu_btn_camera">拍照</string>
+    <string name="title_activity_tab_listener">TabListener</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="title_activity_main">Main</string>
+    <string name="title_activity_dummy_fragment">DummyFragment</string>
 
 </resources>

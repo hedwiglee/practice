@@ -33,6 +33,7 @@ public class MapMain extends Activity {
 		mBMapMan.init("crC3IFDwWPU7K44QphzZmWoN", null);  
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
 		setContentView(R.layout.map_main);
+		
 		mMapView=(MapView)findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 		//设置启用内置的缩放控件
