@@ -3,10 +3,13 @@ package com.practice;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class Main extends FragmentActivity implements ActionBar.TabListener{
 
@@ -22,8 +25,6 @@ public class Main extends FragmentActivity implements ActionBar.TabListener{
 		actionBar.addTab(actionBar.newTab().setText("游记").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("探索").setTabListener(this));
 		setContentView(R.layout.main);
-		System.out.println("set main.xml");
-		System.out.println("main oncreate over");
 	}
 
 	@Override
@@ -53,13 +54,29 @@ public class Main extends FragmentActivity implements ActionBar.TabListener{
 	@Override
 	public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		Fragment fg=new TripList();
-		Bundle args=new Bundle();
-		/*args.putInt(DummyFragment.ARG_SECTION_NUMBER, tab.getPosition()+1);
+		Fragment fg_map=new MapMain();
+		Fragment fg_trip=new TripList();
+		Fragment fg_explore=new Explore();
+		/*Bundle args=new Bundle();
+		args.putInt(DummyFragment.ARG_SECTION_NUMBER, tab.getPosition()+1);
 		fg.setArguments(args);*/
 		FragmentManager fm=getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction=fm.beginTransaction();
-		fragmentTransaction.replace(R.id.container, fg);
+		System.out.println("position:"+tab.getPosition());
+		switch (tab.getPosition()) {
+		case 0:
+			fragmentTransaction.replace(R.id.container, fg_map);	
+			break;
+		case 1:
+			fragmentTransaction.replace(R.id.container, fg_trip);
+			break;
+		case 2:
+			fragmentTransaction.replace(R.id.container, fg_explore);			
+			break;
+
+		default:
+			break;
+		}
 		fragmentTransaction.commit();
 		System.out.println("5");
 	}
@@ -69,5 +86,34 @@ public class Main extends FragmentActivity implements ActionBar.TabListener{
 		// TODO Auto-generated method stub
 
 		System.out.println("6");
+	}
+	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem mi) {
+		if (mi.isCheckable()) {
+			mi.setChecked(true);
+		}
+		switch (mi.getItemId()) {
+		case R.id.action_camera:
+			Intent intent_camera = new Intent();
+			intent_camera.setClass(Main.this, TakePhoto.class);
+			startActivity(intent_camera);			
+			break;
+		case R.id.action_new:
+			Intent intent_new = new Intent();
+			intent_new.setClass(Main.this, NewTrip.class);
+			startActivity(intent_new);
+		default:
+			break;
+		}
+		return true;
 	}
 }

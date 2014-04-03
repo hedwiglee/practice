@@ -65,30 +65,32 @@ public final class R {
     public static final class layout {
         public static final int activity_test=0x7f030000;
         public static final int dummy_fragment=0x7f030001;
-        public static final int line=0x7f030002;
-        public static final int main=0x7f030003;
-        public static final int map_main=0x7f030004;
-        public static final int new_trip=0x7f030005;
-        public static final int photo_list=0x7f030006;
-        public static final int pic_detail=0x7f030007;
-        public static final int save=0x7f030008;
-        public static final int tab_listener=0x7f030009;
-        public static final int take_photo=0x7f03000a;
-        public static final int trip_list=0x7f03000b;
-        public static final int trip_show=0x7f03000c;
-        public static final int triplist_line=0x7f03000d;
+        public static final int explore=0x7f030002;
+        public static final int line=0x7f030003;
+        public static final int main=0x7f030004;
+        public static final int map_main=0x7f030005;
+        public static final int new_trip=0x7f030006;
+        public static final int photo_list=0x7f030007;
+        public static final int pic_detail=0x7f030008;
+        public static final int save=0x7f030009;
+        public static final int tab_listener=0x7f03000a;
+        public static final int take_photo=0x7f03000b;
+        public static final int trip_list=0x7f03000c;
+        public static final int trip_show=0x7f03000d;
+        public static final int triplist_line=0x7f03000e;
     }
     public static final class menu {
         public static final int dummy=0x7f070000;
-        public static final int main=0x7f070001;
-        public static final int map_main=0x7f070002;
-        public static final int new_trip=0x7f070003;
-        public static final int photo_list=0x7f070004;
-        public static final int pic_detail=0x7f070005;
-        public static final int tab_listener=0x7f070006;
-        public static final int test=0x7f070007;
-        public static final int trip_list=0x7f070008;
-        public static final int trip_show=0x7f070009;
+        public static final int explore=0x7f070001;
+        public static final int main=0x7f070002;
+        public static final int map_main=0x7f070003;
+        public static final int new_trip=0x7f070004;
+        public static final int photo_list=0x7f070005;
+        public static final int pic_detail=0x7f070006;
+        public static final int tab_listener=0x7f070007;
+        public static final int test=0x7f070008;
+        public static final int trip_list=0x7f070009;
+        public static final int trip_show=0x7f07000a;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -107,6 +109,7 @@ public final class R {
         public static final int string_newtrip_tripname=0x7f05000f;
         public static final int take_photo=0x7f050008;
         public static final int title_activity_dummy_fragment=0x7f05001e;
+        public static final int title_activity_explore=0x7f05001f;
         public static final int title_activity_main=0x7f05001d;
         public static final int title_activity_map_main=0x7f050007;
         public static final int title_activity_new_trip=0x7f05000e;

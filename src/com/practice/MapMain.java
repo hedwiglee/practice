@@ -6,16 +6,21 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.app.Activity;
 import android.content.Intent;
 
 /*
  * 主页
  * */
-public class MapMain extends Activity {
+public class MapMain extends Fragment {
 
 	BMapManager mBMapMan = null;
 	MapView mMapView = null;
@@ -25,16 +30,24 @@ public class MapMain extends Activity {
 	Button tripListBtn;
 	//跳转到新建游记的按钮
 	Button newTripButton;	
+	View v;
 
+	@Override  
+    public void onAttach(Activity activity) {  
+        super.onAttach(activity); 
+		mBMapMan=new BMapManager(activity.getApplication());
+		System.out.println("====================================");
+    }  
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mBMapMan=new BMapManager(getApplication());
 		mBMapMan.init("crC3IFDwWPU7K44QphzZmWoN", null);  
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
-		setContentView(R.layout.map_main);
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+        v = inflater.inflate(R.layout.map_main, (ViewGroup) getActivity().findViewById(R.id.container), false);
+		mMapView=(MapView)v.findViewById(R.id.bmapsView);
 		
-		mMapView=(MapView)findViewById(R.id.bmapsView);
 		mMapView.setBuiltInZoomControls(true);
 		//设置启用内置的缩放控件
 		MapController mMapController=mMapView.getController();
@@ -44,18 +57,25 @@ public class MapMain extends Activity {
 		mMapController.setCenter(point);//设置地图中心点
 		mMapController.setZoom(12);//设置地图zoom级别		
 	}
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	 {
+		return v;
+	 }
 
 	@Override
-	protected void onDestroy(){
-	        mMapView.destroy();
-	        if(mBMapMan!=null){
-	                mBMapMan.destroy();
-	                mBMapMan=null;
-	        }
-	        super.onDestroy();
+	public void onDestroy() {
+		// TODO Auto-generated method stubmMapView.destroy();
+        if(mBMapMan!=null){
+            mBMapMan.destroy();
+            mBMapMan=null;
+        }
+		super.onDestroyView();
+		
 	}
+
 	@Override
-	protected void onPause(){
+	public void onPause(){
 	        mMapView.onPause();
 	        if(mBMapMan!=null){
 	               mBMapMan.stop();
@@ -63,39 +83,11 @@ public class MapMain extends Activity {
 	        super.onPause();
 	}
 	@Override
-	protected void onResume(){
+	public void onResume(){
 	        mMapView.onResume();
 	        if(mBMapMan!=null){
 	                mBMapMan.start();
 	        }
 	       super.onResume();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.map_main, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem mi) {
-		if (mi.isCheckable()) {
-			mi.setChecked(true);
-		}
-		switch (mi.getItemId()) {
-		case R.id.action_camera:
-			Intent intent_camera = new Intent();
-			intent_camera.setClass(MapMain.this, TakePhoto.class);
-			startActivity(intent_camera);			
-			break;
-		case R.id.action_new:
-			Intent intent_new = new Intent();
-			intent_new.setClass(MapMain.this, NewTrip.class);
-			startActivity(intent_new);
-		default:
-			break;
-		}
-		return true;
-	}
+	}	
 }

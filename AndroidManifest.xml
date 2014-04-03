@@ -119,6 +119,10 @@
             android:name="com.practice.DummyFragment"
             android:label="@string/title_activity_dummy_fragment" >
         </activity>
+        <activity
+            android:name="com.practice.Explore"
+            android:label="@string/title_activity_explore" >
+        </activity>
     </application>
 
 </manifest>

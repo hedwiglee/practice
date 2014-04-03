@@ -32,5 +32,6 @@
     <string name="title_section3">Section 3</string>
     <string name="title_activity_main">Main</string>
     <string name="title_activity_dummy_fragment">DummyFragment</string>
+    <string name="title_activity_explore">Explore</string>
 
 </resources>

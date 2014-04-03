@@ -8,7 +8,6 @@ import java.util.Map;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,8 +33,7 @@ public class TripList extends Fragment {
     
     @Override  
     public void onAttach(Activity activity) {  
-        super.onAttach(activity);  
-        System.out.println("triplist onattach");
+        super.onAttach(activity);
     }  
 	
 	public void onCreate(Bundle savedInstanceState)
@@ -112,6 +110,7 @@ public class TripList extends Fragment {
           map.put("trip_name", result.getString(result.getColumnIndex("trip_name")));
           map.put("keyword", result.getString(result.getColumnIndex("keyword")));
           list.add(map);
+          System.out.println("triplist map:"+result.getString(result.getColumnIndex("trip_name")));
         }
         return list;  
     }    
