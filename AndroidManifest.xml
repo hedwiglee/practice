@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- 使用网络功能所需权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
@@ -121,6 +123,10 @@
         </activity>
         <activity
             android:name="com.practice.Explore"
+            android:label="@string/title_activity_explore" >
+        </activity>
+        <activity
+            android:name="com.practice.PocketSphinxActivity"
             android:label="@string/title_activity_explore" >
         </activity>
     </application>

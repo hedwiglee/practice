@@ -1,12 +1,20 @@
 package com.practice;
 
+import static android.widget.Toast.makeText;
+import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
+
 import java.io.File;
+import edu.cmu.pocketsphinx.AssetsTask;
+import edu.cmu.pocketsphinx.AssetsTaskCallback;
+import edu.cmu.pocketsphinx.Hypothesis;
+import edu.cmu.pocketsphinx.RecognitionListener;
+import edu.cmu.pocketsphinx.SpeechRecognizer;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -16,12 +24,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /*
  * 为所拍摄的照片添加详情
  * */
-public class PicDetail extends Activity {
-
+public class PicDetail extends Activity{    
+	
 	private ImageView photoview;
 	SQLiteDatabase db;
 	Button saveBtn;
@@ -55,7 +65,7 @@ public class PicDetail extends Activity {
 					insertData(db,description,photoname);
 					//启动新activity
 	    			Intent intent = new Intent();
-	    			intent.setClass(PicDetail.this, PhotoList.class);
+	    			intent.setClass(PicDetail.this, PocketSphinxActivity.class);
 	    			startActivity(intent);
 				}
 				catch(SQLException e) {
@@ -79,5 +89,5 @@ public class PicDetail extends Activity {
 		if (db!=null&&db.isOpen()) {
 			db.close();
 		}
-	}
+	}	
 }

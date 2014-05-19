@@ -36,7 +36,6 @@ public class MapMain extends Fragment {
     public void onAttach(Activity activity) {  
         super.onAttach(activity); 
 		mBMapMan=new BMapManager(activity.getApplication());
-		System.out.println("====================================");
     }  
 	
 	@Override

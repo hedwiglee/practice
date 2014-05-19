@@ -30,8 +30,8 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="title_activity_main">Main</string>
+    <string name="title_activity_main">旅行日记</string>
     <string name="title_activity_dummy_fragment">DummyFragment</string>
-    <string name="title_activity_explore">Explore</string>
+    <string name="title_activity_explore">探索</string>
 
 </resources>

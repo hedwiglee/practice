@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.ListView;
@@ -71,10 +74,10 @@ public class TripList extends Fragment {
         System.out.println("triplist:set adapter");
 		
 		//ListView的点击事件
-		/*list.setOnItemClickListener(new OnItemClickListener() {
+		list.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id){
 				Intent intent = new Intent();
-    			intent.setClass(TripList.this, TripShow.class);
+    			intent.setClass(getActivity(), TripShow.class);
     			Bundle bundle = new Bundle();
     			//tripnameText=(TextView)findViewById(R.id.triplist_id_hidden);
     			tripnameText=(TextView)list.getChildAt(position).findViewById(R.id.triplist_id_hidden);
@@ -85,7 +88,7 @@ public class TripList extends Fragment {
     	        tripName=null;
     			startActivity(intent);
 			}
-		});*/
+		});
 	}
     
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -95,22 +98,16 @@ public class TripList extends Fragment {
 	 }
 	
 	private List<? extends Map<String, ?>> getData(Cursor result) {  
-        /*List<Map<String ,Object>> list = new ArrayList<Map<String,Object>>();          
-        for (int i = 0; i < strs.length; i++) {  
-            Map<String, Object> map = new HashMap<String, Object>();  
-            map.put("title", strs[i]);  
-            list.add(map);                
-        }   */         
-        
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-        HashMap<String, String> map = new HashMap<String, String>();
-
         while (result.moveToNext()) {
+          HashMap<String, String> map = new HashMap<String, String>();
           map.put("_id", result.getString(result.getColumnIndex("_id")));
           map.put("trip_name", result.getString(result.getColumnIndex("trip_name")));
           map.put("keyword", result.getString(result.getColumnIndex("keyword")));
           list.add(map);
-          System.out.println("triplist map:"+result.getString(result.getColumnIndex("trip_name")));
+        }        
+        for (int i=0;i<5;i++){
+        	System.out.println("list value:"+list.get(i));
         }
         return list;  
     }    

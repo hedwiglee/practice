@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,7 @@ public class TripShow extends Activity {
 	SQLiteDatabase db;
 	Cursor cursor;
 	Cursor isoverCursor;
+	ListView list;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class TripShow extends Activity {
 		tripoverTextView=(TextView)findViewById(R.id.tripshow_isover_text);
 		tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());		
 		
+		//结束旅程按钮
 		endTripButton=(Button)findViewById(R.id.end_trip_btn);
 		endTripButton.setOnClickListener(new OnClickListener() {			
 			@Override
@@ -74,6 +78,28 @@ public class TripShow extends Activity {
 				tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());
 			}
 		});
+		
+		list=(ListView)findViewById(R.id.tripshow_list);
+		
+		//读取图片列表和相应描述
+		try {
+			cursor=db.rawQuery("select * from pic_info", null);
+		}
+		catch (Exception e) {
+			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+					"photo_time date," +
+					"pic_description varchar(255),photo_keyword varchar(255),photo_place varchar(100)," +
+					"photo_path varchar(150))");
+			cursor=db.rawQuery("select * from pic_info", null);
+		}
+		System.out.println(cursor.getCount());
+		String[] title={"pic_description"};
+		int[] r_id={R.id.tripshow_pic_description};
+		/*dbaseFunc=new DatabaseFunc();
+		dbaseFunc.inflateList(cursor, PhotoList.this, R.layout.line, title, r_id, list);*/
+		SimpleCursorAdapter adapter=new SimpleCursorAdapter(TripShow.this, R.layout.tripshow_line, cursor, title, r_id,
+				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+		list.setAdapter(adapter);
 	}	
 
 	@Override
