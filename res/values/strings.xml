@@ -33,5 +33,6 @@
     <string name="title_activity_main">旅行日记</string>
     <string name="title_activity_dummy_fragment">DummyFragment</string>
     <string name="title_activity_explore">探索</string>
+    <string name="psa_caption_key">关键字</string>
 
 </resources>

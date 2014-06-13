@@ -108,6 +108,7 @@ public final class R {
         public static final int menu_btn_new=0x7f050017;
         public static final int menu_btn_search=0x7f050016;
         public static final int photo_name=0x7f050002;
+        public static final int psa_caption_key=0x7f050020;
         public static final int save_btn=0x7f050004;
         public static final int string_end_trip=0x7f050014;
         public static final int string_newtrip_endtime=0x7f050011;
