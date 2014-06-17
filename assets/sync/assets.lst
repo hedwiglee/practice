@@ -15,15 +15,7 @@ models/hmm/tdt_sc_8k/noisedict
 models/hmm/tdt_sc_8k/sendump
 models/hmm/tdt_sc_8k/transition_matrices
 models/hmm/tdt_sc_8k/variances
-models/kws/gugongkey.txt
-models/kws/kws
-models/kws/kws.txt
-models/kws/sun.txt
+models/kws/all_regular_kws.txt
+models/lm/all_regular_words.dic
 models/lm/cmu07a.dic
-models/lm/gugong.dic
-models/lm/gugong.lm.DMP
-models/lm/sun.dic
-models/lm/sun.lm.DMP
-models/lm/three.dic
-models/lm/three.lm.DMP
 models/lm/weather.dmp

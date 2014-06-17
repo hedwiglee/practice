@@ -10,6 +10,6 @@ grammar digits;
           车站 |
           早餐 |
           太阳 |
-          生活 ;
+          猫咪;
 
 public <digits> = <digit>+;
