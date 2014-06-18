@@ -20,20 +20,29 @@
         android:layout_marginTop="5dp" 
         android:layout_centerHorizontal="true"/>
 
-    <TextView
+    <!--  TextView
         android:id="@+id/description_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/photo_description"
         android:layout_below="@+id/thumbnail"
         android:layout_marginTop="15dp"
-        android:text="@string/description_title" />
+        android:text="@string/description_title" />-->
     
+     <Button
+        android:id="@+id/speak_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/photo_description"
+        android:layout_below="@+id/thumbnail"
+        android:layout_marginTop="15dp"
+        android:text="@string/description_title" />
+        
     <EditText
         android:id="@+id/photo_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/description_textview"
+        android:layout_below="@+id/speak_start"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:ems="10"

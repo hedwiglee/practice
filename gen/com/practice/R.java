@@ -33,7 +33,6 @@ public final class R {
         public static final int bmapsView=0x7f080000;
         public static final int caption_text=0x7f080014;
         public static final int container=0x7f080003;
-        public static final int description_textview=0x7f08000f;
         public static final int end_trip_btn=0x7f08001a;
         public static final int list_description=0x7f080001;
         public static final int list_path=0x7f080002;
@@ -51,6 +50,7 @@ public final class R {
         public static final int result_text=0x7f080015;
         public static final int sView=0x7f080016;
         public static final int save_detail=0x7f080011;
+        public static final int speak_start=0x7f08000f;
         public static final int take_picture=0x7f080017;
         public static final int thumbnail=0x7f08000e;
         public static final int thumbnail_image=0x7f08001d;

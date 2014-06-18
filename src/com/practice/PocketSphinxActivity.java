@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ public class PocketSphinxActivity extends Activity implements
     private static final String FORECAST_SEARCH = "forecast";
     private static final String DIGITS_SEARCH = "digits";
     private static final String MENU_SEARCH = "menu";
-    private static final String KEYPHRASE = "博物馆";
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
