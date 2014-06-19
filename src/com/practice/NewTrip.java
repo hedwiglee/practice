@@ -48,18 +48,18 @@ public class NewTrip extends Activity {
 				String tripstart=((EditText)findViewById(R.id.newtrip_starttime_plain)).getText().toString();
 				String tripend=((EditText)findViewById(R.id.newtrip_endtime_plain)).getText().toString();
 				String tripkey=((EditText)findViewById(R.id.newtrip_keywords_plain)).getText().toString();
-				try {
+				/*try {
 					db.execSQL("insert into trip_list(trip_name,start_time,end_time,keyword,is_over) " +
 							"values (?,?,?,?,0)",new String[] {tripname,tripstart,tripend,tripkey});
 				}
-				catch (Exception e) {
-					db.execSQL("create table trip_list(_id integer primary key autoincrement,trip_name varchar(40)," +
+				catch (Exception e) {*/
+					db.execSQL("create table if not exists trip_list(_id integer primary key autoincrement,trip_name varchar(40)," +
 							"start_time date,end_time date," +
 							"user_id varchar(20),participate varchar(100),thumbnail_photo varchar(100)," +
 							"keyword varchar(255),photo_nums integer,trip_location varchar(100),is_over integer)");
 					db.execSQL("insert into trip_list(trip_name,start_time,end_time,keyword,is_over) " +
 							"values (?,?,?,?,0)",new String[] {tripname,tripstart,tripend,tripkey});
-				}
+				//}
 				
 				//启动新activity
     			Intent intent = new Intent();

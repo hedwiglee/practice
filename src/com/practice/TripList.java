@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
@@ -65,11 +67,9 @@ public class TripList extends Fragment {
 		}
 		String[] title={"_id","trip_name","keyword"};
 		int[] r_id={R.id.triplist_id_hidden,R.id.triplist_title_text,R.id.triplist_keyword_text};
-		/*dbaseFunc=new DatabaseFunc();
-		dbaseFunc.inflateList(cursor, PhotoList.this, R.layout.line, title, r_id, list);*/
-		/*SimpleCursorAdapter adapter=new SimpleCursorAdapter(TripList.this, R.layout.triplist_line, cursor, title, r_id,	CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-		list.setAdapter(adapter);*/
-        adapter = new SimpleAdapter(getActivity(), getData(cursor), R.layout.triplist_line, title, r_id);  
+        adapter = new SimpleAdapter(getActivity(), getData(cursor), R.layout.triplist_line, title, r_id); 
+		/*Context context=getActivity().getApplicationContext();
+		adapter=new TripBaseAdapter(context, R.layout.triplist_line);*/
         list.setAdapter(adapter);  
         System.out.println("triplist:set adapter");
 		

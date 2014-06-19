@@ -1,6 +1,8 @@
 package com.practice;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,12 +12,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.practice.Trip;
 
 public class TripShow extends Activity {
 	Button endTripButton;
@@ -31,7 +34,6 @@ public class TripShow extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.trip_show);
-		
 		//triplist传递的旅程的_id值
 		Intent camIntent=this.getIntent();
 		tripname=camIntent.getStringExtra("tripName");
@@ -91,15 +93,27 @@ public class TripShow extends Activity {
 					"pic_description varchar(255),photo_keyword varchar(255),photo_place varchar(100)," +
 					"photo_path varchar(150))");
 			cursor=db.rawQuery("select * from pic_info", null);
-		}
+		}		
 		System.out.println(cursor.getCount());
-		String[] title={"pic_description"};
-		int[] r_id={R.id.tripshow_pic_description};
-		/*dbaseFunc=new DatabaseFunc();
-		dbaseFunc.inflateList(cursor, PhotoList.this, R.layout.line, title, r_id, list);*/
-		SimpleCursorAdapter adapter=new SimpleCursorAdapter(TripShow.this, R.layout.tripshow_line, cursor, title, r_id,
+		/*String[] title={"pic_description"};
+		int[] r_id={R.id.tripshow_pic_description};*/
+
+		//将cursor里面的内容赋给List
+        List<Trip> trips = new ArrayList<Trip>();
+		while(cursor.moveToNext()) {
+            Trip aTrip=new Trip(cursor.getString(3),cursor.getString(6));
+    		if (aTrip!=null) {
+    			trips.add(aTrip);
+    		}
+        }
+		TripBaseAdapter tripBaseAdapter=new TripBaseAdapter(this, list, trips);
+		System.out.println("======after tripbase");
+		list.setAdapter(tripBaseAdapter);
+		System.out.println("======after set adapter");
+		
+		/*SimpleCursorAdapter adapter=new SimpleCursorAdapter(TripShow.this, R.layout.tripshow_line, cursor, title, r_id,
 				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-		list.setAdapter(adapter);
+		list.setAdapter(adapter);*/
 	}	
 
 	@Override
