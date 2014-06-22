@@ -99,17 +99,18 @@ public class TripShow extends Activity {
 		int[] r_id={R.id.tripshow_pic_description};*/
 
 		//将cursor里面的内容赋给List
-        List<Trip> trips = new ArrayList<Trip>();
+        /*List<Trip> trips = new ArrayList<Trip>();
 		while(cursor.moveToNext()) {
             Trip aTrip=new Trip(cursor.getString(3),cursor.getString(6));
     		if (aTrip!=null) {
     			trips.add(aTrip);
     		}
-        }
-		TripBaseAdapter tripBaseAdapter=new TripBaseAdapter(this, list, trips);
-		System.out.println("======after tripbase");
+        }*/
+		System.out.println("========before tripshow");
+		TripBaseAdapter tripBaseAdapter=new TripBaseAdapter(this, list, cursor);
+		System.out.println("========after new a tripadapter");
 		list.setAdapter(tripBaseAdapter);
-		System.out.println("======after set adapter");
+		System.out.println("========end of tripshow");
 		
 		/*SimpleCursorAdapter adapter=new SimpleCursorAdapter(TripShow.this, R.layout.tripshow_line, cursor, title, r_id,
 				CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);

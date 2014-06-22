@@ -61,6 +61,7 @@ public class PicDetail extends Activity implements RecognitionListener{
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4;
         Bitmap bm = BitmapFactory.decodeFile(photoname, options);
+        System.out.println("========pic detail photopath:"+photoname);
         photoview.setImageBitmap(bm);
         //数据库操作
         File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
@@ -78,7 +79,7 @@ public class PicDetail extends Activity implements RecognitionListener{
 					insertData(db,description,photoname);
 					//启动新activity
 	    			Intent intent = new Intent();
-	    			intent.setClass(PicDetail.this, PocketSphinxActivity.class);
+	    			intent.setClass(PicDetail.this, PhotoList.class);
 	    			startActivity(intent);
 				}
 				catch(SQLException e) {

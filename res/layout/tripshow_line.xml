@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tripshow_pic"
         android:layout_below="@+id/tripshow_pic"
-        android:layout_marginTop="16dp"
-        android:text="TextView" />
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>

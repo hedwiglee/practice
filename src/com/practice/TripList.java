@@ -105,10 +105,7 @@ public class TripList extends Fragment {
           map.put("trip_name", result.getString(result.getColumnIndex("trip_name")));
           map.put("keyword", result.getString(result.getColumnIndex("keyword")));
           list.add(map);
-        }        
-        for (int i=0;i<5;i++){
-        	System.out.println("list value:"+list.get(i));
-        }
+        }      
         return list;  
     }    
 	
