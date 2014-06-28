@@ -54,7 +54,7 @@ public class Main extends FragmentActivity implements ActionBar.TabListener{
 	@Override
 	public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		Fragment fg_map=new MapMain();
+		Fragment fg_map=new LocationOverlayDemo();
 		Fragment fg_trip=new TripList();
 		Fragment fg_explore=new Explore();
 		/*Bundle args=new Bundle();

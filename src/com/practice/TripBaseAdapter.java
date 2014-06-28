@@ -131,6 +131,6 @@ public class TripBaseAdapter extends BaseAdapter{
 	 * @return
 	 */
 	public static Bitmap decodeBitmap(String path) {
-		return decodeBitmap(path, 100);
+		return decodeBitmap(path, 300);
 	}	
 }
