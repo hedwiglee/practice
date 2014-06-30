@@ -1,6 +1,5 @@
 package com.practice;
 
-
 import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
@@ -8,7 +7,6 @@ import android.widget.Toast;
 import com.baidu.mapapi.BMapManager;
 import com.baidu.mapapi.MKGeneralListener;
 import com.baidu.mapapi.map.MKEvent;
-
 
 public class DemoMap extends Application {
 	

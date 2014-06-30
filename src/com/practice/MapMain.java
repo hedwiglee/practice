@@ -18,7 +18,7 @@ import android.app.Activity;
  * */
 public class MapMain extends Fragment {
 
-	BMapManager mBMapMan = null;
+	//BMapManager app.mBMapManager = null;
 	MapView mMapView = null;
 	//跳转到拍照界面的按钮
 	Button photoBtn;
@@ -27,17 +27,19 @@ public class MapMain extends Fragment {
 	//跳转到新建游记的按钮
 	Button newTripButton;	
 	View v;
+	DemoMap app;
 
 	@Override  
     public void onAttach(Activity activity) {  
         super.onAttach(activity); 
-		mBMapMan=new BMapManager(activity.getApplication());
+        app = (DemoMap)activity.getApplication();
+		app.mBMapManager=new BMapManager(activity.getApplication());
     }  
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mBMapMan.init("crC3IFDwWPU7K44QphzZmWoN", null);  
+		app.mBMapManager.init("crC3IFDwWPU7K44QphzZmWoN", null);  
 		//注意：请在试用setContentView前初始化BMapManager对象，否则会报错
 		LayoutInflater inflater = getActivity().getLayoutInflater();
         v = inflater.inflate(R.layout.map_main, (ViewGroup) getActivity().findViewById(R.id.container), false);
@@ -61,9 +63,9 @@ public class MapMain extends Fragment {
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stubmMapView.destroy();
-        if(mBMapMan!=null){
-            mBMapMan.destroy();
-            mBMapMan=null;
+        if(app.mBMapManager!=null){
+            app.mBMapManager.destroy();
+            app.mBMapManager=null;
         }
 		super.onDestroyView();
 		
@@ -72,16 +74,16 @@ public class MapMain extends Fragment {
 	@Override
 	public void onPause(){
 	        mMapView.onPause();
-	        if(mBMapMan!=null){
-	               mBMapMan.stop();
+	        if(app.mBMapManager!=null){
+	               app.mBMapManager.stop();
 	        }
 	        super.onPause();
 	}
 	@Override
 	public void onResume(){
 	        mMapView.onResume();
-	        if(mBMapMan!=null){
-	                mBMapMan.start();
+	        if(app.mBMapManager!=null){
+	                app.mBMapManager.start();
 	        }
 	       super.onResume();
 	}	

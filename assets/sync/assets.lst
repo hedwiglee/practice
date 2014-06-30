@@ -19,5 +19,7 @@ models/kws/all_regular_kws.txt
 models/lm/all_regular_words.dic
 models/kws/50_regular_kws.txt
 models/lm/50_regular_words.dic
+models/kws/20_regular_kws.txt
+models/lm/20_regular_words.dic
 models/lm/cmu07a.dic
 models/lm/weather.dmp

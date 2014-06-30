@@ -201,14 +201,14 @@ public class PicDetail extends Activity implements RecognitionListener{
         File modelsDir = new File(assetsDir, "models");
         recognizer = defaultSetup()
                 .setAcousticModel(new File(modelsDir, "hmm/tdt_sc_8k"))
-                .setDictionary(new File(modelsDir, "lm/all_regular_words.dic"))
-                .setRawLogDir(assetsDir).setKeywordThreshold(1e-3f)
+                .setDictionary(new File(modelsDir, "lm/20_regular_words.dic"))
+                .setRawLogDir(assetsDir).setKeywordThreshold(1e-5f)
                 .getRecognizer();
         recognizer.addListener(this);
 
         // Create keyword-activation search.
         //recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
-        File kwsFile=new File(modelsDir,"kws/all_regular_kws.txt");
+        File kwsFile=new File(modelsDir,"kws/20_regular_kws.txt");
         recognizer.addKeywordSearch(KWS_SEARCH, kwsFile);
         // Create grammar-based searches.
         File menuGrammar = new File(modelsDir, "grammar/menu.gram");

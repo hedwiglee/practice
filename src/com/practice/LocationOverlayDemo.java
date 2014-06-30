@@ -60,9 +60,9 @@ public class LocationOverlayDemo extends Fragment {
 	private TextView  popupText = null;//泡泡view
 	private View viewCache = null;
 	
-	//地图相关，使用继承MapView的MyLocationMapView目的是重写touch事件实现泡泡处理
+	//地图相关，使用继承MapView的MapView目的是重写touch事件实现泡泡处理
 	//如果不处理touch事件，则无需继承，直接使用MapView即可
-	MyLocationMapView mMapView = null;	// 地图View
+	MapView mMapView = null;	// 地图View
 	private MapController mMapController = null;
 
 	//UI相关
@@ -75,19 +75,15 @@ public class LocationOverlayDemo extends Fragment {
     public void onAttach(Activity activity) {  
         super.onAttach(activity); 
         app = (DemoMap)activity.getApplication();
-        if (app.mBMapManager == null) {
-            app.mBMapManager = new BMapManager(activity.getApplicationContext());
-            /**
-             * 如果BMapManager没有初始化则初始化BMapManager
-             */
-            app.mBMapManager.init(DemoMap.strKey,new DemoMap.MyGeneralListener());
-        }
+		app.mBMapManager=new BMapManager(activity.getApplication());
         System.out.println("======on attach");
     }  
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	System.out.println("======enter oncreate");
         super.onCreate(savedInstanceState);
+        app.mBMapManager.init("crC3IFDwWPU7K44QphzZmWoN", null); 
         /*CharSequence titleLable="定位功能";
         /**
          * 使用地图sdk前需先初始化BMapManager.
@@ -138,39 +134,25 @@ public class LocationOverlayDemo extends Fragment {
 			}
 		};
 		group.setOnCheckedChangeListener(radioButtonListener);
-		//地图初始化
-        mMapView = (MyLocationMapView)v.findViewById(R.id.bmapView);
-        mMapController = mMapView.getController();
-        mMapView.getController().setZoom(14);
-        mMapView.getController().enableClick(true);
-        mMapView.setBuiltInZoomControls(true);
-      //创建 弹出泡泡图层
-        createPaopao();
+		
         
         //定位初始化
         mLocClient = new LocationClient(getActivity().getApplicationContext());
         locData = new LocationData();
-        mLocClient.registerLocationListener( myListener );
+        mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);//打开gps
         option.setCoorType("bd09ll");     //设置坐标类型
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
-       
-        //定位图层初始化
-		myLocationOverlay = new locationOverlay(mMapView);
-		//设置定位数据
-	    myLocationOverlay.setData(locData);
-	    //添加定位图层
-		mMapView.getOverlays().add(myLocationOverlay);
-		myLocationOverlay.enableCompass();
-		//修改定位数据后刷新图层生效
-		mMapView.refresh();
-        System.out.println("======refresh");
-		
+        mLocClient.requestLocation();
+
+        
+        System.out.println("======refresh");		
     }
-    /**
+    
+	/**
      * 手动触发一次定位请求
      */
     public void requestLocClick(){
@@ -178,7 +160,8 @@ public class LocationOverlayDemo extends Fragment {
         mLocClient.requestLocation();
         Toast.makeText(getActivity(), "正在定位……", Toast.LENGTH_SHORT).show();
     }
-    /**
+   
+	/**
      * 修改位置图标
      * @param marker
      */
@@ -191,7 +174,7 @@ public class LocationOverlayDemo extends Fragment {
     /**
 	 * 创建弹出泡泡图层
 	 */
-	public void createPaopao(){
+	/*public void createPaopao(){
 		viewCache = getActivity().getLayoutInflater().inflate(R.layout.custom_text_view, null);
         popupText =(TextView) viewCache.findViewById(R.id.textcache);
         //泡泡点击响应回调
@@ -202,8 +185,8 @@ public class LocationOverlayDemo extends Fragment {
 			}
         };
         pop = new PopupOverlay(mMapView,popListener);
-        MyLocationMapView.pop = pop;
-	}
+        MapView.pop = pop;
+	}*/
 	/**
      * 定位SDK监听函数
      */
@@ -219,7 +202,7 @@ public class LocationOverlayDemo extends Fragment {
             //如果不显示定位精度圈，将accuracy赋值为0即可
             locData.accuracy = location.getRadius();
             // 此处可以设置 locData的方向信息, 如果定位 SDK 未返回方向信息，用户可以自己实现罗盘功能添加方向信息。
-            locData.direction = location.getDerect();
+            //locData.direction = location.getDerect();
             //更新定位数据
             myLocationOverlay.setData(locData);
             //更新图层数据执行刷新后生效
@@ -269,12 +252,76 @@ public class LocationOverlayDemo extends Fragment {
 
   	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	 {
+  		System.out.println("=====enter oncreate view");
+  	//地图初始化
+        mMapView = (MapView)v.findViewById(R.id.bmapView);
+        mMapController = mMapView.getController();
+        mMapView.getController().setZoom(14);
+        mMapView.getController().enableClick(true);
+        mMapView.setBuiltInZoomControls(true);
+      //创建 弹出泡泡图层
+        //createPaopao();
+      //定位图层初始化
+      		myLocationOverlay = new locationOverlay(mMapView);
+      		//设置定位数据
+      	    myLocationOverlay.setData(locData);
+      	    //添加定位图层
+      		mMapView.getOverlays().add(myLocationOverlay);
+      		myLocationOverlay.enableCompass();
+      		//修改定位数据后刷新图层生效
+      		mMapView.refresh();
 		return v;
 	 }
   	
+  	 @Override
+     public void setUserVisibleHint(boolean isVisibleToUser) {        //核心方法，避免因Fragment跳转导致地图崩溃
+         super.setUserVisibleHint(isVisibleToUser);
+         if (isVisibleToUser == true) {
+             // if this view is visible to user, start to request user location
+             startRequestLocation();
+         } else if (isVisibleToUser == false) {
+             // if this view is not visible to user, stop to request user
+             // location
+             stopRequestLocation();
+         }
+     }
+
+     private void stopRequestLocation() {
+         if (mLocClient != null) {
+             mLocClient.unRegisterLocationListener(myListener);
+             mLocClient.stop();
+         }
+     }
+
+     private void startRequestLocation() {
+         // this nullpoint check is necessary
+         if (mLocClient != null) {
+             mLocClient.registerLocationListener(myListener);
+             mLocClient.start();
+             mLocClient.requestLocation();
+         }
+     }
+  	
+  	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
+		System.out.println("=======loc onactivity created");
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		System.out.println("=======loc onstart");
+	}
+	
     @Override
 	public void onPause() {
         mMapView.onPause();
+        if(app.mBMapManager!=null){
+               app.mBMapManager.stop();
+        }
         super.onPause();
         System.out.println("======onPause");
     }
@@ -314,14 +361,14 @@ public class LocationOverlayDemo extends Fragment {
 		super.onDestroyView();
 	}
     
-    /*@Override
+    @Override
 	public void onSaveInstanceState(Bundle outState) {
         System.out.println("======enter instance");
     	super.onSaveInstanceState(outState);
     	mMapView.onSaveInstanceState(outState);
         System.out.println("======onsave instance");
     	
-    }*/
+    }
     
     /*protected void onRestoreInstanceState(Bundle savedInstanceState) {
     	super.onRestoreInstanceState(savedInstanceState);
@@ -341,16 +388,16 @@ public class LocationOverlayDemo extends Fragment {
  * @author hejin
  *
  */
-class MyLocationMapView extends MapView{
+/*class MapViewTest extends MapView{
 	static PopupOverlay   pop  = null;//弹出泡泡图层，点击图标使用
-	public MyLocationMapView(Context context) {
+	public MapView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
 	}
-	public MyLocationMapView(Context context, AttributeSet attrs){
+	public MapView(Context context, AttributeSet attrs){
 		super(context,attrs);
 	}
-	public MyLocationMapView(Context context, AttributeSet attrs, int defStyle){
+	public MapView(Context context, AttributeSet attrs, int defStyle){
 		super(context, attrs, defStyle);
 	}
 	@Override
@@ -362,5 +409,4 @@ class MyLocationMapView extends MapView{
 		}
 		return true;
 	}
-}
-
+}*/

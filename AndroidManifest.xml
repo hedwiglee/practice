@@ -3,7 +3,6 @@
     package="com.practice"
     android:versionCode="1"
     android:versionName="1.0" >
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -25,6 +24,7 @@
     <!-- 使用网络功能所需权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
     </uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
@@ -64,18 +64,17 @@
         android:allowBackup="true"
         android:debuggable="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
     <!-- application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" -->
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote" >
-        </service>
 
+		<meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="crC3IFDwWPU7K44QphzZmWoN" />
         <activity
             android:name="com.practice.Main"
             android:label="@string/title_activity_main" >
@@ -139,6 +138,11 @@
             android:name="com.practice.PocketSphinxActivity"
             android:label="@string/title_activity_explore" >
         </activity>
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
     </application>
 
 </manifest>
