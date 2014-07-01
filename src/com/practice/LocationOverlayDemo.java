@@ -147,7 +147,6 @@ public class LocationOverlayDemo extends Fragment {
         mLocClient.setLocOption(option);
         mLocClient.start();
         mLocClient.requestLocation();
-
         
         System.out.println("======refresh");		
     }
@@ -216,6 +215,7 @@ public class LocationOverlayDemo extends Fragment {
                 myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
 				requestLocButton.setText("跟随");
                 mCurBtnType = E_BUTTON_TYPE.FOLLOW;
+                System.out.println("======geo:"+locData.latitude);
             }
             //首次定位完成
             isFirstLoc = false;
