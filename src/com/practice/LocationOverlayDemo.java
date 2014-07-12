@@ -1,15 +1,11 @@
 package com.practice;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,7 +25,6 @@ import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.MyLocationOverlay.LocationMode;
-import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 /**
@@ -58,7 +53,6 @@ public class LocationOverlayDemo extends Fragment {
 	//弹出泡泡图层
 	private PopupOverlay   pop  = null;//弹出泡泡图层，浏览节点时使用
 	private TextView  popupText = null;//泡泡view
-	private View viewCache = null;
 	
 	//地图相关，使用继承MapView的MapView目的是重写touch事件实现泡泡处理
 	//如果不处理touch事件，则无需继承，直接使用MapView即可
@@ -226,6 +220,7 @@ public class LocationOverlayDemo extends Fragment {
             if (poiLocation == null){
                 return ;
             }
+            System.out.println("=========onreceive poi");
         }
     }
     

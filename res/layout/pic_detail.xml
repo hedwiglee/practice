@@ -50,6 +50,13 @@
 
         <requestFocus />
     </EditText>
+    
+    <com.baidu.mapapi.map.MapView 
+        android:id="@+id/map_picdetail"
+	    android:layout_width="300dp" 
+	    android:layout_height="100dp" 
+	    android:clickable="true"     
+	/>
 
     <Button
         android:id="@+id/save_detail"

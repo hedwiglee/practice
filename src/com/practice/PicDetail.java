@@ -1,12 +1,24 @@
 package com.practice;
 
-import static android.widget.Toast.makeText;
 import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.LocationData;
+import com.baidu.mapapi.map.MapController;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.mapapi.map.PopupOverlay;
+import com.baidu.mapapi.map.MyLocationOverlay.LocationMode;
+import com.baidu.platform.comapi.basestruct.GeoPoint;
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
@@ -20,41 +32,74 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.MotionEvent;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 /*
  * 为所拍摄的照片添加详情
  * */
 public class PicDetail extends Activity implements RecognitionListener{    
-	
+	//照片相关
 	private ImageView photoview;
 	SQLiteDatabase db;
 	Button saveBtn;
 	String photoname;
-	
+	//语音识别相关
 	private static final String KWS_SEARCH = "火车";
     private static final String FORECAST_SEARCH = "forecast";
     private static final String DIGITS_SEARCH = "digits";
-    private static final String MENU_SEARCH = "menu";
-
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
     private Button startButton;
+    
+    //地图相关
+	private E_BUTTON_TYPE mCurBtnType;
+	private enum E_BUTTON_TYPE {
+		LOC,
+		COMPASS,
+		FOLLOW
+	}
+	LocationClient mLocClient;
+	LocationData locData = null;
+	public MyLocationListenner myListener = new MyLocationListenner();
+	//定位图层
+	locationOverlay myLocationOverlay = null;
+	//弹出泡泡图层
+	private PopupOverlay   pop  = null;//弹出泡泡图层，浏览节点时使用
+	private TextView  popupText = null;//泡泡view	
+	//地图相关，使用继承MapView的MapView目的是重写touch事件实现泡泡处理
+	//如果不处理touch事件，则无需继承，直接使用MapView即可
+	MapView mMapView = null;	// 地图View
+	private MapController mMapController = null;
+	//UI相关
+	OnCheckedChangeListener radioButtonListener = null;
+	Button requestLocButton = null;
+	boolean isRequest = false;//是否手动触发请求定位
+	boolean isFirstLoc = true;//是否首次定位
 	
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DemoMap app = (DemoMap)this.getApplication();
+        if (app.mBMapManager == null) {
+            app.mBMapManager = new BMapManager(getApplicationContext());
+            /**
+             * 如果BMapManager没有初始化则初始化BMapManager
+             */
+            app.mBMapManager.init(DemoMap.strKey,new DemoMap.MyGeneralListener());
+        }
 		setContentView(R.layout.pic_detail);
 		System.out.println("=====on create");
-		//显示图片
+		//***********************显示图片****************************
 		photoview = (ImageView) findViewById(R.id.thumbnail);
 		Intent camIntent=this.getIntent();
 		photoname=camIntent.getStringExtra("picPath");
@@ -63,7 +108,7 @@ public class PicDetail extends Activity implements RecognitionListener{
         Bitmap bm = BitmapFactory.decodeFile(photoname, options);
         System.out.println("========pic detail photopath:"+photoname);
         photoview.setImageBitmap(bm);
-        //数据库操作
+        //***********************数据库操作**********************
         File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
 		if (!filepath.exists()){
 			filepath.mkdir();
@@ -92,55 +137,76 @@ public class PicDetail extends Activity implements RecognitionListener{
 			}
 		});        
 		
-		//语音识别部分
+		//****************地图相关**************************
+        System.out.println("============注册");
+        app.mBMapManager.init("crC3IFDwWPU7K44QphzZmWoN", null); 
+                
+        
+      //地图初始化
+        mMapView = (MapView)findViewById(R.id.map_picdetail);
+        mMapController = mMapView.getController();
+        mMapView.getController().setZoom(14);
+        mMapView.getController().enableClick(true);
+        mMapView.setBuiltInZoomControls(true);
+
+        //定位初始化
+        System.out.println("===========定位初始化");
+        mLocClient = new LocationClient(this.getApplicationContext());
+        locData = new LocationData();
+        mLocClient.registerLocationListener(myListener);
+        System.out.println("===========定位初始化2");
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);//打开gps
+        option.setCoorType("bd09ll");     //设置坐标类型
+        option.setScanSpan(1000);
+        System.out.println("===========定位初始化3");
+        mLocClient.setLocOption(option);
+        mLocClient.start();
+        mLocClient.requestLocation();
+        
+      //定位图层初始化
+  		myLocationOverlay = new locationOverlay(mMapView);
+  		//设置定位数据
+  	    myLocationOverlay.setData(locData);
+  	    //添加定位图层
+  		mMapView.getOverlays().add(myLocationOverlay);
+  		myLocationOverlay.enableCompass();
+  		//修改定位数据后刷新图层生效
+  		mMapView.refresh();
+        
+        System.out.println("======refresh");
+		
+		//***********************语音识别部分***********************
 		System.out.println("======recognition part");
 		captions = new HashMap<String, Integer>();
         captions.put(KWS_SEARCH, R.string.psa_caption_key);
-        //((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
         startButton=(Button)findViewById(R.id.speak_start);
         // Recognizer initialization is a time-consuming and it involves IO,
-        // so we execute it in async task
-        startButton.setOnTouchListener(new OnTouchListener() {	
-			public boolean onTouch(View v, MotionEvent event) {		
-				// TODO Auto-generated method stub
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:	
-			        	System.out.println("======action down");			        	 
-						new AsyncTask<Void, Void, Exception>() {
-				            @Override
-				            protected Exception doInBackground(Void... params) {
-				                try {
-				                    Assets assets = new Assets(PicDetail.this);
-				                    File assetDir = assets.syncAssets();                 
-				                    setupRecognizer(assetDir);
-				                    System.out.println("=======setup recognizer");
-				                } catch (IOException e) {
-				                    return e;
-				                }
-				                return null;
-				            }
-		
-				            @Override
-				            protected void onPostExecute(Exception result) {
-				                if (result != null) {
-				                    //((TextView) findViewById(R.id.caption_text)).setText("Failed to init recognizer " + result);
-				                } else {
-				                    switchSearch(KWS_SEARCH);
-				                }
-				                System.out.println("=======on post execute");
-				            }
-				        }.execute();
-				        break;
-					case MotionEvent.ACTION_UP:
-			        	System.out.println("======action up");
-						recognizer.stop();
-						break;
-					default:
-						;
-				}
-				return false;
-			}
-		});        
+        // so we execute it in async task	        	 
+		new AsyncTask<Void, Void, Exception>() {
+            @Override
+            protected Exception doInBackground(Void... params) {
+                try {
+                    Assets assets = new Assets(PicDetail.this);
+                    File assetDir = assets.syncAssets();                 
+                    setupRecognizer(assetDir);
+                    System.out.println("=======setup recognizer");
+                } catch (IOException e) {
+                    return e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Exception result) {
+                if (result != null) {
+                    //((TextView) findViewById(R.id.caption_text)).setText("Failed to init recognizer " + result);
+                } else {
+                    switchSearch(KWS_SEARCH);
+                }
+                System.out.println("=======on post execute");
+            }
+        }.execute();		          
 	}	
 
 	private void insertData(SQLiteDatabase db,String description,String path){
@@ -148,33 +214,29 @@ public class PicDetail extends Activity implements RecognitionListener{
 	}
 	
 	@Override
-	public void onDestroy() {
+	public void onDestroy() {		
+		if (mLocClient != null)
+            mLocClient.stop();
+        mMapView.destroy();
 		super.onDestroy();
 		if (db!=null&&db.isOpen()) {
 			db.close();
-		}
+		}    
 	}	
 	
 	//语音识别模块
 	@Override
     public void onPartialResult(Hypothesis hypothesis) {
         String text = hypothesis.getHypstr();
-        /*if (text.equals(KEYPHRASE))
-            switchSearch(MENU_SEARCH);
-        else if (text.equals(DIGITS_SEARCH))
-            switchSearch(DIGITS_SEARCH);
-        else if (text.equals(FORECAST_SEARCH))
-            switchSearch(FORECAST_SEARCH);
-        else*/
-            ((TextView) findViewById(R.id.photo_description)).setText(text);
+        ((TextView) findViewById(R.id.photo_description)).setText(text);
     }
 
     @Override
     public void onResult(Hypothesis hypothesis) {
-        ((TextView) findViewById(R.id.photo_description)).setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
-            makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            //makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            ((TextView) findViewById(R.id.photo_description)).setText(text);
         }
     }
 
@@ -193,8 +255,7 @@ public class PicDetail extends Activity implements RecognitionListener{
     	System.out.println("======start switch search");
         recognizer.stop();
         recognizer.startListening(searchName);
-        String caption = getResources().getString(captions.get(searchName));
-        //((TextView) findViewById(R.id.caption_text)).setText(caption);
+        getResources().getString(captions.get(searchName));
     }
 
     private void setupRecognizer(File assetsDir) {
@@ -206,17 +267,137 @@ public class PicDetail extends Activity implements RecognitionListener{
                 .getRecognizer();
         recognizer.addListener(this);
 
-        // Create keyword-activation search.
-        //recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
         File kwsFile=new File(modelsDir,"kws/20_regular_kws.txt");
         recognizer.addKeywordSearch(KWS_SEARCH, kwsFile);
-        // Create grammar-based searches.
-        File menuGrammar = new File(modelsDir, "grammar/menu.gram");
-        recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
-        File digitsGrammar = new File(modelsDir, "grammar/digits.gram");
-        recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
-        // Create language model search.
-        //File languageModel = new File(modelsDir, "lm/three.lm.DMP");
-        //recognizer.addNgramSearch(FORECAST_SEARCH, languageModel);
+    }      
+    
+    /**
+     * 手动触发一次定位请求
+     */
+    public void requestLocClick(){
+    	isRequest = true;
+        mLocClient.requestLocation();
+        Toast.makeText(this, "正在定位……", Toast.LENGTH_SHORT).show();
+    }
+   
+	/**
+     * 修改位置图标
+     * @param marker
+     */
+    public void modifyLocationOverlayIcon(Drawable marker){
+    	//当传入marker为null时，使用默认图标绘制
+    	myLocationOverlay.setMarker(marker);
+    	//修改图层，需要刷新MapView生效
+    	mMapView.refresh();
+    }
+	/**
+     * 定位SDK监听函数
+     */
+    public class MyLocationListenner implements BDLocationListener {
+    	
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if (location == null)
+                return ;
+            
+            locData.latitude = location.getLatitude();
+            locData.longitude = location.getLongitude();
+            //如果不显示定位精度圈，将accuracy赋值为0即可
+            locData.accuracy = location.getRadius();
+            // 此处可以设置 locData的方向信息, 如果定位 SDK 未返回方向信息，用户可以自己实现罗盘功能添加方向信息。
+            //locData.direction = location.getDerect();
+            //更新定位数据
+            myLocationOverlay.setData(locData);
+            //更新图层数据执行刷新后生效
+            mMapView.refresh();
+            //是手动触发请求或首次定位时，移动到定位点
+            if (isRequest || isFirstLoc){
+                System.out.println("======enter if isrequest");
+            	//移动地图到定位点
+            	Log.d("LocationOverlay", "receive location, animate to it");
+                mMapController.animateTo(new GeoPoint((int)(locData.latitude* 1e6), (int)(locData.longitude *  1e6)));
+                isRequest = false;
+                myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
+				//requestLocButton.setText("跟随");
+                //mCurBtnType = E_BUTTON_TYPE.FOLLOW;
+                System.out.println("======geo:"+locData.latitude);
+            }
+            //首次定位完成
+            isFirstLoc = false;
+            System.out.println("======on receive location");
+        }
+        
+        public void onReceivePoi(BDLocation poiLocation) {
+            if (poiLocation == null){
+                return ;
+            }
+            System.out.println("=========onreceive poi");
+        }
+    }
+    
+    //继承MyLocationOverlay重写dispatchTap实现点击处理
+  	public class locationOverlay extends MyLocationOverlay{
+
+  		public locationOverlay(MapView mapView) {
+  			super(mapView);
+  			// TODO Auto-generated constructor stub
+  		}
+  		@Override
+  		protected boolean dispatchTap() {
+  			// TODO Auto-generated method stub
+  			//处理点击事件,弹出泡泡
+  			popupText.setBackgroundResource(R.drawable.popup);
+			popupText.setText("我的位置");
+			pop.showPopup(BMapUtil.getBitmapFromView(popupText),
+					new GeoPoint((int)(locData.latitude*1e6), (int)(locData.longitude*1e6)),
+					8);
+  			return true;
+  		}  		
+  	}
+
+     private void stopRequestLocation() {
+         if (mLocClient != null) {
+             mLocClient.unRegisterLocationListener(myListener);
+             mLocClient.stop();
+         }
+     }
+
+     private void startRequestLocation() {
+         // this nullpoint check is necessary
+         if (mLocClient != null) {
+             mLocClient.registerLocationListener(myListener);
+             mLocClient.start();
+             mLocClient.requestLocation();
+         }
+     }
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		System.out.println("=======loc onstart");
+	}
+	
+    @Override
+	public void onPause() {
+        mMapView.onPause();
+        super.onPause();
+        System.out.println("======onPause");
+    }
+    
+    @Override
+	public void onResume() {
+        mMapView.onResume();
+       super.onResume();
+       System.out.println("======onResume");
+    }
+        
+    @Override
+	public void onSaveInstanceState(Bundle outState) {
+        System.out.println("======enter instance");
+    	super.onSaveInstanceState(outState);
+    	mMapView.onSaveInstanceState(outState);
+        System.out.println("======onsave instance");
+    	
     }
 }
