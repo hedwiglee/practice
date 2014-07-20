@@ -43,8 +43,8 @@ public class PhotoList extends Activity {
 			cursor=db.rawQuery("select * from pic_info", null);
 		}
 		System.out.println(cursor.getCount());
-		String[] title={"photo_path","pic_description"};
-		int[] r_id={R.id.list_path,R.id.list_description};
+		String[] title={"photo_path","pic_description","photo_loclati","photo_loclongi"};
+		int[] r_id={R.id.list_path,R.id.list_description,R.id.list_lati,R.id.list_longi};
 		/*dbaseFunc=new DatabaseFunc();
 		dbaseFunc.inflateList(cursor, PhotoList.this, R.layout.line, title, r_id, list);*/
 		SimpleCursorAdapter adapter=new SimpleCursorAdapter(PhotoList.this, R.layout.line, cursor, title, r_id,

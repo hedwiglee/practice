@@ -84,8 +84,8 @@ public class TripBaseAdapter extends BaseAdapter{
 			viewholder = (ViewHolder) convertView.getTag();
 		}
         //Bitmap bm = decodeBitmap(trip.getImagepath());
-		Bitmap bm = decodeBitmap(cursor.getString(6));
-		System.out.println("========path:"+cursor.getString(6));
+		Bitmap bm = decodeBitmap(cursor.getString(8));
+		System.out.println("========path:"+cursor.getString(8));
         viewholder.photoImageView.setImageBitmap(bm);
 		System.out.println("========before set text");
 		viewholder.keywordTextView.setText(cursor.getString(3));

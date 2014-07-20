@@ -43,6 +43,9 @@ public class LocationOverlayDemo extends Fragment {
 	
 	private E_BUTTON_TYPE mCurBtnType;
 
+	double mLon1 = 116.400244 ;
+	double mLat1 = 39.963175 ;
+	
 	// 定位相关
 	LocationClient mLocClient;
 	LocationData locData = null;
@@ -70,12 +73,10 @@ public class LocationOverlayDemo extends Fragment {
         super.onAttach(activity); 
         app = (DemoMap)activity.getApplication();
 		app.mBMapManager=new BMapManager(activity.getApplication());
-        System.out.println("======on attach");
     }  
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	System.out.println("======enter oncreate");
         super.onCreate(savedInstanceState);
         app.mBMapManager.init("crC3IFDwWPU7K44QphzZmWoN", null); 
         /*CharSequence titleLable="定位功能";
@@ -140,9 +141,7 @@ public class LocationOverlayDemo extends Fragment {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
-        mLocClient.requestLocation();
-        
-        System.out.println("======refresh");		
+        mLocClient.requestLocation();	
     }
     
 	/**
@@ -209,18 +208,15 @@ public class LocationOverlayDemo extends Fragment {
                 myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
 				requestLocButton.setText("跟随");
                 mCurBtnType = E_BUTTON_TYPE.FOLLOW;
-                System.out.println("======geo:"+locData.latitude);
             }
             //首次定位完成
             isFirstLoc = false;
-            System.out.println("======on receive location");
         }
         
         public void onReceivePoi(BDLocation poiLocation) {
             if (poiLocation == null){
                 return ;
             }
-            System.out.println("=========onreceive poi");
         }
     }
     
@@ -247,14 +243,13 @@ public class LocationOverlayDemo extends Fragment {
 
   	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	 {
-  		System.out.println("=====enter oncreate view");
-  	//地图初始化
+  		//地图初始化
         mMapView = (MapView)v.findViewById(R.id.bmapView);
         mMapController = mMapView.getController();
         mMapView.getController().setZoom(14);
         mMapView.getController().enableClick(true);
         mMapView.setBuiltInZoomControls(true);
-      //创建 弹出泡泡图层
+        //创建 弹出泡泡图层
         //createPaopao();
       //定位图层初始化
       		myLocationOverlay = new locationOverlay(mMapView);
@@ -301,14 +296,12 @@ public class LocationOverlayDemo extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		System.out.println("=======loc onactivity created");
 	}
 
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		System.out.println("=======loc onstart");
 	}
 	
     @Override
@@ -318,7 +311,6 @@ public class LocationOverlayDemo extends Fragment {
                app.mBMapManager.stop();
         }
         super.onPause();
-        System.out.println("======onPause");
     }
     
     @Override
@@ -332,12 +324,10 @@ public class LocationOverlayDemo extends Fragment {
                 app.mBMapManager.start();
         }
        super.onResume();
-       System.out.println("======onResume");
     }
     
     @Override
 	public void onDestroy() {
-        System.out.println("======enter onDestroy");
     	//退出时销毁定位
         /*if (mLocClient != null)
             mLocClient.stop();*/
@@ -347,7 +337,6 @@ public class LocationOverlayDemo extends Fragment {
         }
         mMapView.destroy();        
 		super.onDestroy();        
-        System.out.println("======onDestroy");
     }
 
 	@Override
@@ -358,11 +347,8 @@ public class LocationOverlayDemo extends Fragment {
     
     @Override
 	public void onSaveInstanceState(Bundle outState) {
-        System.out.println("======enter instance");
     	super.onSaveInstanceState(outState);
-    	mMapView.onSaveInstanceState(outState);
-        System.out.println("======onsave instance");
-    	
+    	mMapView.onSaveInstanceState(outState);    	
     }
     
     /*protected void onRestoreInstanceState(Bundle savedInstanceState) {

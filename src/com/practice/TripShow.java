@@ -49,10 +49,11 @@ public class TripShow extends Activity {
 			cursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
 		}
 		catch (Exception e) {
-			db.execSQL("create table trip_list(_id integer primary key autoincrement,trip_name varchar(40)," +
-					"start_time date,end_time date," +
-					"user_id varchar(20),participate varchar(100),thumbnail_photo varchar(100)," +
-					"keyword varchar(255),photo_nums integer,trip_location varchar(100),is_over integer)");
+			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+					"photo_time date," +
+					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
+					"photo_loclongi int,photo_place varchar(100)," +
+					"photo_path varchar(150))");
 			cursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
 		}
 		
@@ -90,7 +91,8 @@ public class TripShow extends Activity {
 		catch (Exception e) {
 			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
 					"photo_time date," +
-					"pic_description varchar(255),photo_keyword varchar(255),photo_place varchar(100)," +
+					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
+					"photo_loclongi int,photo_place varchar(100)," +
 					"photo_path varchar(150))");
 			cursor=db.rawQuery("select * from pic_info", null);
 		}		

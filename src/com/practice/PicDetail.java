@@ -67,6 +67,8 @@ public class PicDetail extends Activity implements RecognitionListener{
 		COMPASS,
 		FOLLOW
 	}
+	private String loclati=null;	
+	private String loclong=null;
 	LocationClient mLocClient;
 	LocationData locData = null;
 	public MyLocationListenner myListener = new MyLocationListenner();
@@ -121,7 +123,7 @@ public class PicDetail extends Activity implements RecognitionListener{
 				// 获取用户输入
 				String description=((EditText)findViewById(R.id.photo_description)).getText().toString();
 				try {
-					insertData(db,description,photoname);
+					insertData(db, description, photoname, loclati, loclong);
 					//启动新activity
 	    			Intent intent = new Intent();
 	    			intent.setClass(PicDetail.this, PhotoList.class);
@@ -130,19 +132,19 @@ public class PicDetail extends Activity implements RecognitionListener{
 				catch(SQLException e) {
 					db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
 								"photo_time date," +
-								"pic_description varchar(255),photo_keyword varchar(255),photo_place varchar(100)," +
+								"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
+								"photo_loclongi int,photo_place varchar(100)," +
 								"photo_path varchar(150))");
-					insertData(db, description, photoname);
+					insertData(db, description, photoname, loclati, loclong);
 				}
 			}
 		});        
 		
 		//****************地图相关**************************
-        System.out.println("============注册");
         app.mBMapManager.init("crC3IFDwWPU7K44QphzZmWoN", null); 
                 
         
-      //地图初始化
+        //地图初始化
         mMapView = (MapView)findViewById(R.id.map_picdetail);
         mMapController = mMapView.getController();
         mMapView.getController().setZoom(14);
@@ -150,16 +152,13 @@ public class PicDetail extends Activity implements RecognitionListener{
         mMapView.setBuiltInZoomControls(true);
 
         //定位初始化
-        System.out.println("===========定位初始化");
         mLocClient = new LocationClient(this.getApplicationContext());
         locData = new LocationData();
         mLocClient.registerLocationListener(myListener);
-        System.out.println("===========定位初始化2");
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);//打开gps
         option.setCoorType("bd09ll");     //设置坐标类型
         option.setScanSpan(1000);
-        System.out.println("===========定位初始化3");
         mLocClient.setLocOption(option);
         mLocClient.start();
         mLocClient.requestLocation();
@@ -173,11 +172,8 @@ public class PicDetail extends Activity implements RecognitionListener{
   		myLocationOverlay.enableCompass();
   		//修改定位数据后刷新图层生效
   		mMapView.refresh();
-        
-        System.out.println("======refresh");
 		
 		//***********************语音识别部分***********************
-		System.out.println("======recognition part");
 		captions = new HashMap<String, Integer>();
         captions.put(KWS_SEARCH, R.string.psa_caption_key);
         startButton=(Button)findViewById(R.id.speak_start);
@@ -190,7 +186,6 @@ public class PicDetail extends Activity implements RecognitionListener{
                     Assets assets = new Assets(PicDetail.this);
                     File assetDir = assets.syncAssets();                 
                     setupRecognizer(assetDir);
-                    System.out.println("=======setup recognizer");
                 } catch (IOException e) {
                     return e;
                 }
@@ -204,13 +199,12 @@ public class PicDetail extends Activity implements RecognitionListener{
                 } else {
                     switchSearch(KWS_SEARCH);
                 }
-                System.out.println("=======on post execute");
             }
         }.execute();		          
 	}	
 
-	private void insertData(SQLiteDatabase db,String description,String path){
-		db.execSQL("insert into pic_info values (null,1,null,?,null,null,?)",new String[] {description,path});
+	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi){
+		db.execSQL("insert into pic_info values (null,1,null,?,null,?,?,null,?)",new String[] {description,lati,longi,path});
 	}
 	
 	@Override
@@ -316,15 +310,15 @@ public class PicDetail extends Activity implements RecognitionListener{
             	//移动地图到定位点
             	Log.d("LocationOverlay", "receive location, animate to it");
                 mMapController.animateTo(new GeoPoint((int)(locData.latitude* 1e6), (int)(locData.longitude *  1e6)));
+                loclati=(int)(locData.latitude* 1e6)+"";
+                loclong=(int)(locData.longitude*1e6)+"";
                 isRequest = false;
                 myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
 				//requestLocButton.setText("跟随");
                 //mCurBtnType = E_BUTTON_TYPE.FOLLOW;
-                System.out.println("======geo:"+locData.latitude);
             }
             //首次定位完成
             isFirstLoc = false;
-            System.out.println("======on receive location");
         }
         
         public void onReceivePoi(BDLocation poiLocation) {
@@ -349,8 +343,7 @@ public class PicDetail extends Activity implements RecognitionListener{
   			popupText.setBackgroundResource(R.drawable.popup);
 			popupText.setText("我的位置");
 			pop.showPopup(BMapUtil.getBitmapFromView(popupText),
-					new GeoPoint((int)(locData.latitude*1e6), (int)(locData.longitude*1e6)),
-					8);
+					new GeoPoint((int)(locData.latitude*1e6), (int)(locData.longitude*1e6)),8);
   			return true;
   		}  		
   	}
@@ -397,7 +390,6 @@ public class PicDetail extends Activity implements RecognitionListener{
         System.out.println("======enter instance");
     	super.onSaveInstanceState(outState);
     	mMapView.onSaveInstanceState(outState);
-        System.out.println("======onsave instance");
-    	
+        System.out.println("======onsave instance");    	
     }
 }
