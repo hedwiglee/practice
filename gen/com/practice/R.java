@@ -26,10 +26,11 @@ public final class R {
         public static final int ic_action_search=0x7f020002;
         public static final int ic_launcher=0x7f020003;
         public static final int icon_geo=0x7f020004;
-        public static final int popup=0x7f020005;
-        public static final int popup_down=0x7f020006;
-        public static final int popup_middle=0x7f020007;
-        public static final int popup_side=0x7f020008;
+        public static final int icon_marka=0x7f020005;
+        public static final int popup=0x7f020006;
+        public static final int popup_down=0x7f020007;
+        public static final int popup_middle=0x7f020008;
+        public static final int popup_side=0x7f020009;
     }
     public static final class id {
         public static final int action_camera=0x7f080035;
@@ -43,10 +44,10 @@ public final class R {
         public static final int customicon=0x7f080003;
         public static final int defaulticon=0x7f080002;
         public static final int end_trip_btn=0x7f080027;
-        public static final int list_description=0x7f08000b;
+        public static final int list_description=0x7f08000c;
         public static final int list_lati=0x7f08000d;
         public static final int list_longi=0x7f08000e;
-        public static final int list_path=0x7f08000c;
+        public static final int list_path=0x7f08000b;
         public static final int map_picdetail=0x7f08001d;
         public static final int newtrip_endtime_plain=0x7f080015;
         public static final int newtrip_endtime_text=0x7f080014;

@@ -1,6 +1,12 @@
 package com.practice;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,10 +26,15 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
+import com.baidu.mapapi.map.Ground;
+import com.baidu.mapapi.map.GroundOverlay;
+import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
+import com.baidu.mapapi.map.OverlayItem;
+import com.baidu.mapapi.map.PopupClickListener;
 import com.baidu.mapapi.map.MyLocationOverlay.LocationMode;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
@@ -43,9 +54,18 @@ public class LocationOverlayDemo extends Fragment {
 	
 	private E_BUTTON_TYPE mCurBtnType;
 
-	double mLon1 = 116.400244 ;
-	double mLat1 = 39.963175 ;
-	
+	//覆盖物相关
+	double mLon1 = 116.364921 ;
+	double mLat1 = 39.967079 ;
+	private MyOverlay mOverlay = null;
+	private OverlayItem mCurItem = null;
+	private ArrayList<OverlayItem>  mItems = null; 
+	private View viewCache = null;
+	private View popupInfo = null;
+	private View popupLeft = null;
+	private View popupRight = null;
+	private Button button = null;
+	private MapView.LayoutParams layoutParam = null;
 	// 定位相关
 	LocationClient mLocClient;
 	LocationData locData = null;
@@ -67,6 +87,14 @@ public class LocationOverlayDemo extends Fragment {
 	Button requestLocButton = null;
 	boolean isRequest = false;//是否手动触发请求定位
 	boolean isFirstLoc = true;//是否首次定位
+	
+	//数据库相关
+	private Cursor cursor;
+	private SQLiteDatabase db;
+	private ArrayList<Double> latiArray;
+	private ArrayList<Double> longiArray;
+	private double loclati;
+	private double loclongi;
 	
 	@Override  
     public void onAttach(Activity activity) {  
@@ -142,6 +170,32 @@ public class LocationOverlayDemo extends Fragment {
         mLocClient.setLocOption(option);
         mLocClient.start();
         mLocClient.requestLocation();	
+        
+        try {
+			cursor=db.rawQuery("select * from pic_info", null);
+		}
+		catch (Exception e) {
+			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+					"photo_time date," +
+					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
+					"photo_loclongi int,photo_place varchar(100)," +
+					"photo_path varchar(150))");
+			cursor=db.rawQuery("select * from pic_info", null);
+		}
+        
+        mOverlay = new MyOverlay(getResources().getDrawable(R.drawable.icon_marka),mMapView);	
+        while(cursor.moveToNext()){
+        	//循环读取数据库中地址，显示关键词在地图上
+        	if (cursor.getString(5)!=null&&cursor.getString(6)!=null){
+	        	/*latiArray.add(Double.parseDouble(cursor.getString(5)));
+	        	longiArray.add(Double.parseDouble(cursor.getString(6)));*/
+        		loclati=Double.parseDouble(cursor.getString(5));
+        		loclongi=Double.parseDouble(cursor.getString(6));
+            	GeoPoint p1 = new GeoPoint ((int)(loclati*1E6),(int)(loclongi*1E6));
+                OverlayItem item1 = new OverlayItem(p1,"覆盖物1","");
+                item1.setMarker(getResources().getDrawable(R.drawable.icon_marka));        		
+        	}
+        }
     }
     
 	/**
@@ -163,22 +217,6 @@ public class LocationOverlayDemo extends Fragment {
     	//修改图层，需要刷新MapView生效
     	mMapView.refresh();
     }
-    /**
-	 * 创建弹出泡泡图层
-	 */
-	/*public void createPaopao(){
-		viewCache = getActivity().getLayoutInflater().inflate(R.layout.custom_text_view, null);
-        popupText =(TextView) viewCache.findViewById(R.id.textcache);
-        //泡泡点击响应回调
-        PopupClickListener popListener = new PopupClickListener(){
-			@Override
-			public void onClickedPopup(int index) {
-				Log.v("click", "clickapoapo");
-			}
-        };
-        pop = new PopupOverlay(mMapView,popListener);
-        MapView.pop = pop;
-	}*/
 	/**
      * 定位SDK监听函数
      */
@@ -222,7 +260,7 @@ public class LocationOverlayDemo extends Fragment {
     
     //继承MyLocationOverlay重写dispatchTap实现点击处理
   	public class locationOverlay extends MyLocationOverlay{
-
+ 
   		public locationOverlay(MapView mapView) {
   			super(mapView);
   			// TODO Auto-generated constructor stub
@@ -252,14 +290,15 @@ public class LocationOverlayDemo extends Fragment {
         //创建 弹出泡泡图层
         //createPaopao();
       //定位图层初始化
-      		myLocationOverlay = new locationOverlay(mMapView);
-      		//设置定位数据
-      	    myLocationOverlay.setData(locData);
-      	    //添加定位图层
-      		mMapView.getOverlays().add(myLocationOverlay);
-      		myLocationOverlay.enableCompass();
-      		//修改定位数据后刷新图层生效
-      		mMapView.refresh();
+  		myLocationOverlay = new locationOverlay(mMapView);
+  		//设置定位数据
+  	    myLocationOverlay.setData(locData);
+  	    //添加定位图层
+  		mMapView.getOverlays().add(myLocationOverlay);
+  		myLocationOverlay.enableCompass();
+  		//修改定位数据后刷新图层生效
+  		mMapView.refresh();
+        initOverlay();
 		return v;
 	 }
   	
@@ -292,6 +331,124 @@ public class LocationOverlayDemo extends Fragment {
          }
      }
   	
+     //创建覆盖物
+     public void initOverlay(){
+    	 System.out.println("=========enter init overlay");
+     	/**
+     	 * 创建自定义overlay
+     	 */
+         mOverlay = new MyOverlay(getActivity().getResources().getDrawable(R.drawable.icon_marka),mMapView);	
+     	 System.out.println("=========create overlay");
+          /**
+           * 准备overlay 数据
+           */
+          GeoPoint p1 = new GeoPoint ((int)(mLat1*1E6),(int)(mLon1*1E6));
+          OverlayItem item1 = new OverlayItem(p1,"覆盖物1","");
+          /**
+           * 设置overlay图标，如不设置，则使用创建ItemizedOverlay时的默认图标.
+           */
+          item1.setMarker(getResources().getDrawable(R.drawable.icon_marka));
+     	 System.out.println("=========set marker");
+          /**
+           * 将item 添加到overlay中
+           * 注意： 同一个itme只能add一次
+           */
+          mOverlay.addItem(item1);
+          /**
+           * 保存所有item，以便overlay在reset后重新添加
+           */
+          mItems = new ArrayList<OverlayItem>();
+          mItems.addAll(mOverlay.getAllItem());
+
+          /**
+           * 将overlay 添加至MapView中
+           */
+          mMapView.getOverlays().add(mOverlay);
+     	 System.out.println("=========add overlay");
+          /**
+           * 刷新地图
+           */
+          mMapView.refresh();
+          /**
+           * 向地图添加自定义View.
+           */
+          //viewCache = getActivity().getLayoutInflater().inflate(R.layout.custom_text_view, null);
+          /*popupInfo = (View) viewCache.findViewById(R.id.popinfo);
+          popupLeft = (View) viewCache.findViewById(R.id.popleft);
+          popupRight = (View) viewCache.findViewById(R.id.popright);
+          popupText =(TextView) viewCache.findViewById(R.id.textcache);*/
+          
+          /*button = new Button(this);
+          button.setBackgroundResource(R.drawable.popup);*/
+          
+          /**
+           * 创建一个popupoverlay
+           */
+          /*PopupClickListener popListener = new PopupClickListener(){
+ 			@Override
+ 			public void onClickedPopup(int index) {
+ 				if ( index == 0){
+ 					//更新item位置
+ 				      pop.hidePop();
+ 				      GeoPoint p = new GeoPoint(mCurItem.getPoint().getLatitudeE6()+5000,
+ 				    		  mCurItem.getPoint().getLongitudeE6()+5000);
+ 				      mCurItem.setGeoPoint(p);
+ 				      mOverlay.updateItem(mCurItem);
+ 				      mMapView.refresh();
+ 				}
+ 				else if(index == 2){
+ 					//更新图标
+ 					mCurItem.setMarker(getResources().getDrawable(R.drawable.nav_turn_via_1));
+ 					mOverlay.updateItem(mCurItem);
+ 				    mMapView.refresh();
+ 				}
+ 			}
+          };
+          */
+          //pop = new PopupOverlay(mMapView,popListener);        
+          System.out.println("========end initoverlay");
+     }
+     
+     public class MyOverlay extends ItemizedOverlay{
+
+ 		public MyOverlay(Drawable defaultMarker, MapView mapView) {
+ 			super(defaultMarker, mapView);
+ 		}		
+
+ 		@Override
+ 		public boolean onTap(int index){
+ 			OverlayItem item = getItem(index);
+ 			mCurItem = item ;
+ 			if (index == 3){
+ 				button.setText("这是一个系统控件");
+ 				/*GeoPoint pt = new GeoPoint((int) (mLat4 * 1E6),
+ 						(int) (mLon4 * 1E6));*/
+ 				// 弹出自定义View
+ 				//pop.showPopup(button, pt, 32);
+ 			}
+ 			else{
+ 			   popupText.setText(getItem(index).getTitle());
+ 			   Bitmap[] bitMaps={
+ 				    BMapUtil.getBitmapFromView(popupLeft), 		
+ 				    BMapUtil.getBitmapFromView(popupInfo), 		
+ 				    BMapUtil.getBitmapFromView(popupRight) 		
+ 			    };
+ 			    pop.showPopup(bitMaps,item.getPoint(),32);
+ 			}
+ 			return true;
+ 		}
+ 		
+ 		@Override
+ 		public boolean onTap(GeoPoint pt , MapView mMapView){
+ 			if (pop != null){
+                 pop.hidePop();
+                 mMapView.removeView(button);
+ 			}
+ 			return false;
+ 		}
+     	
+     }
+     
   	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -349,45 +506,5 @@ public class LocationOverlayDemo extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
     	super.onSaveInstanceState(outState);
     	mMapView.onSaveInstanceState(outState);    	
-    }
-    
-    /*protected void onRestoreInstanceState(Bundle savedInstanceState) {
-    	super.onRestoreInstanceState(savedInstanceState);
-    	mMapView.onRestoreInstanceState(savedInstanceState);
-    }*/
-    
-    /*public boolean onCreateOptionsMenu(Menu menu) {
-        System.out.println("======enter options menu");
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        System.out.println("======options menu");
-        return true;
-    }*/
-
+    }  
 }
-/**
- * 继承MapView重写onTouchEvent实现泡泡处理操作
- * @author hejin
- *
- */
-/*class MapViewTest extends MapView{
-	static PopupOverlay   pop  = null;//弹出泡泡图层，点击图标使用
-	public MapView(Context context) {
-		super(context);
-		// TODO Auto-generated constructor stub
-	}
-	public MapView(Context context, AttributeSet attrs){
-		super(context,attrs);
-	}
-	public MapView(Context context, AttributeSet attrs, int defStyle){
-		super(context, attrs, defStyle);
-	}
-	@Override
-    public boolean onTouchEvent(MotionEvent event){
-		if (!super.onTouchEvent(event)){
-			//消隐泡泡
-			if (pop != null && event.getAction() == MotionEvent.ACTION_UP)
-				pop.hidePop();
-		}
-		return true;
-	}
-}*/
