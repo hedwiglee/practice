@@ -1,5 +1,6 @@
 package com.practice;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,8 +93,8 @@ public class LocationOverlayDemo extends Fragment {
 	//数据库相关
 	private Cursor cursor;
 	private SQLiteDatabase db;
-	private ArrayList<Double> latiArray;
-	private ArrayList<Double> longiArray;
+	private ArrayList<Double> latiArray=new ArrayList<Double>();
+	private ArrayList<Double> longiArray=new ArrayList<Double>();
 	private double loclati;
 	private double loclongi;
 	
@@ -170,32 +172,7 @@ public class LocationOverlayDemo extends Fragment {
         mLocClient.setLocOption(option);
         mLocClient.start();
         mLocClient.requestLocation();	
-        
-        try {
-			cursor=db.rawQuery("select * from pic_info", null);
-		}
-		catch (Exception e) {
-			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
-					"photo_time date," +
-					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
-					"photo_loclongi int,photo_place varchar(100)," +
-					"photo_path varchar(150))");
-			cursor=db.rawQuery("select * from pic_info", null);
-		}
-        
-        mOverlay = new MyOverlay(getResources().getDrawable(R.drawable.icon_marka),mMapView);	
-        while(cursor.moveToNext()){
-        	//循环读取数据库中地址，显示关键词在地图上
-        	if (cursor.getString(5)!=null&&cursor.getString(6)!=null){
-	        	/*latiArray.add(Double.parseDouble(cursor.getString(5)));
-	        	longiArray.add(Double.parseDouble(cursor.getString(6)));*/
-        		loclati=Double.parseDouble(cursor.getString(5));
-        		loclongi=Double.parseDouble(cursor.getString(6));
-            	GeoPoint p1 = new GeoPoint ((int)(loclati*1E6),(int)(loclongi*1E6));
-                OverlayItem item1 = new OverlayItem(p1,"覆盖物1","");
-                item1.setMarker(getResources().getDrawable(R.drawable.icon_marka));        		
-        	}
-        }
+       
     }
     
 	/**
@@ -339,36 +316,63 @@ public class LocationOverlayDemo extends Fragment {
      	 */
          mOverlay = new MyOverlay(getActivity().getResources().getDrawable(R.drawable.icon_marka),mMapView);	
      	 System.out.println("=========create overlay");
-          /**
-           * 准备overlay 数据
-           */
-          GeoPoint p1 = new GeoPoint ((int)(mLat1*1E6),(int)(mLon1*1E6));
-          OverlayItem item1 = new OverlayItem(p1,"覆盖物1","");
-          /**
-           * 设置overlay图标，如不设置，则使用创建ItemizedOverlay时的默认图标.
-           */
-          item1.setMarker(getResources().getDrawable(R.drawable.icon_marka));
-     	 System.out.println("=========set marker");
-          /**
-           * 将item 添加到overlay中
-           * 注意： 同一个itme只能add一次
-           */
-          mOverlay.addItem(item1);
-          /**
-           * 保存所有item，以便overlay在reset后重新添加
-           */
-          mItems = new ArrayList<OverlayItem>();
-          mItems.addAll(mOverlay.getAllItem());
+     	 
+     	 
+     	File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
+ 		if (!filepath.exists()){
+ 			filepath.mkdir();
+ 		}
+     	db=SQLiteDatabase.openOrCreateDatabase(filepath+"/travelbook.db3", null);
+         try {
+ 			cursor=db.rawQuery("select * from pic_info", null);
+ 		}
+ 		catch (Exception e) {
+ 			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+ 					"photo_time date," +
+ 					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
+ 					"photo_loclongi int,photo_place varchar(100)," +
+ 					"photo_path varchar(150))");
+ 			cursor=db.rawQuery("select * from pic_info", null);
+ 	    	System.out.println("进入了catch");
+ 		}
+     	System.out.println("读取数据库取出条目");
+         
+         while(cursor.moveToNext()){
+         	//循环读取数据库中地址，显示关键词在地图上
+         	System.out.println("显示关键词在地图");
+         	if (cursor.getString(5)!=null&&cursor.getString(6)!=null){
+         		loclati=Integer.parseInt(cursor.getString(5))*1E-6;
+         		loclongi=Integer.parseInt(cursor.getString(6))*1E-6;
+ 	        	latiArray.add(loclati);
+ 	        	longiArray.add(loclongi);
+         		System.out.println("坐标："+loclati+"  "+loclongi);
+             	GeoPoint p1 = new GeoPoint ((int)(loclati*1E6),(int)(loclongi*1E6));
+	             OverlayItem item1 = new OverlayItem(p1,"覆盖物1","");
+	             item1.setMarker(getResources().getDrawable(R.drawable.icon_marka));  
+	             System.out.println("=========set marker");
+	             /**
+	              * 将item 添加到overlay中
+	              * 注意： 同一个itme只能add一次
+	              */
+	             mOverlay.addItem(item1);
+	             /**
+	              * 保存所有item，以便overlay在reset后重新添加
+	              */
+	             mItems = new ArrayList<OverlayItem>();
+	             mItems.addAll(mOverlay.getAllItem());
+         	}
+         }  	    	 
 
-          /**
-           * 将overlay 添加至MapView中
-           */
-          mMapView.getOverlays().add(mOverlay);
-     	 System.out.println("=========add overlay");
-          /**
-           * 刷新地图
-           */
-          mMapView.refresh();
+         /**
+          * 将overlay 添加至MapView中
+          */
+         mMapView.getOverlays().add(mOverlay);
+    	 System.out.println("=========add overlay");
+         /**
+          * 刷新地图
+          */
+         mMapView.refresh();      		
+     	 
           /**
            * 向地图添加自定义View.
            */
