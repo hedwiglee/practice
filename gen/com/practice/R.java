@@ -31,11 +31,12 @@ public final class R {
         public static final int popup_down=0x7f020007;
         public static final int popup_middle=0x7f020008;
         public static final int popup_side=0x7f020009;
+        public static final int select=0x7f02000a;
     }
     public static final class id {
-        public static final int action_camera=0x7f080035;
-        public static final int action_new=0x7f080034;
-        public static final int action_settings=0x7f080033;
+        public static final int action_camera=0x7f080037;
+        public static final int action_new=0x7f080036;
+        public static final int action_settings=0x7f080035;
         public static final int bmapView=0x7f080000;
         public static final int bmapsView=0x7f08000a;
         public static final int button1=0x7f080004;
@@ -81,9 +82,11 @@ public final class R {
         public static final int triplist_starttime_text=0x7f08002c;
         public static final int triplist_title_text=0x7f08002b;
         public static final int tripshow_isover_text=0x7f080028;
+        public static final int tripshow_lati=0x7f080032;
         public static final int tripshow_list=0x7f080029;
+        public static final int tripshow_longi=0x7f080034;
         public static final int tripshow_pic=0x7f080031;
-        public static final int tripshow_pic_description=0x7f080032;
+        public static final int tripshow_pic_description=0x7f080033;
         public static final int tripshow_travelname=0x7f080026;
         public static final int voice_start=0x7f08001f;
         public static final int voice_stop=0x7f080020;
@@ -160,15 +163,15 @@ public final class R {
         public static final int voice_recognize_stop=0x7f050021;
     }
     public static final class style {
+        public static final int ActionBarTabBars=0x7f060006;
+        public static final int ActionBarTabText=0x7f060004;
+        public static final int ActionBarTabs=0x7f060005;
+        public static final int Actionbar=0x7f060002;
+        public static final int ActionbarTitle=0x7f060003;
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
@@ -183,7 +186,6 @@ public final class R {
          */
         public static final int AppBaseTheme=0x7f060000;
         /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
     }
