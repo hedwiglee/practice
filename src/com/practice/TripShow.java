@@ -50,7 +50,7 @@ public class TripShow extends Activity {
 		}
 		catch (Exception e) {
 			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
-					"photo_time date," +
+					"photo_time date," +  
 					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 					"photo_loclongi int,photo_place varchar(100)," +
 					"photo_path varchar(150))");

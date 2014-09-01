@@ -10,11 +10,40 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        <item name="android:actionBarStyle">@style/Actionbar</item>
+        <item name="android:actionBarTabTextStyle">@style/ActionBarTabText</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabs</item>
+        <item name="android:actionBarTabBarStyle">@style/ActionBarTabBars </item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:actionBarStyle">@style/Actionbar</item>
+        <item name="android:actionBarTabTextStyle">@style/ActionBarTabText</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabs</item>
+        <item name="android:actionBarTabBarStyle">@style/ActionBarTabBars </item>
     </style>
+    
+    <style name="Actionbar" parent="android:Widget.ActionBar">
+        <item name="android:background">#5c9425</item>
+        <item name="android:titleTextStyle">@style/ActionbarTitle</item>
+    </style>
+    
+    <style name="ActionbarTitle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    
+    <style name="ActionBarTabText" parent="android:Widget.Holo.ActionBar.TabText">  
+        <item name="android:textColor">#1e1e1e</item>  
+    </style>  
+  
+    <style name="ActionBarTabs" parent="android:Widget.Holo.ActionBar.TabView">  
+        <item name="android:background">#ffffff</item>  
+    </style>  
+  
+    <style name="ActionBarTabBars" parent="android:Widget.Holo.ActionBar.TabBar">    
+        <item name="android:showDividers">none</item>    
+    </style>  
 
 </resources>

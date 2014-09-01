@@ -17,11 +17,38 @@
         android:src="@drawable/ic_launcher" />
 
     <TextView
+        android:id="@+id/tripshow_lati"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tripshow_pic"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="15dp" 
+        android:textColor="#5c9425"
+        android:textStyle="italic"
+        android:textSize="5pt"
+        android:text="11111111111" />
+
+    <TextView
         android:id="@+id/tripshow_pic_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tripshow_lati"
+        android:layout_below="@+id/tripshow_lati"
+        android:layout_marginTop="14dp"
+        android:text="description" />
+
+    <TextView
+        android:id="@+id/tripshow_longi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tripshow_lati"
+        android:layout_alignBottom="@+id/tripshow_lati"
         android:layout_alignLeft="@+id/tripshow_pic"
-        android:layout_below="@+id/tripshow_pic"
-        android:layout_marginTop="16dp" />
+        android:layout_marginLeft="60dp"
+        android:textColor="#5c9425"
+        android:textStyle="italic"
+        android:textSize="5pt"
+        android:text="22222222222" />
 
 </RelativeLayout>

@@ -1,9 +1,5 @@
 package com.practice;
 
-import java.util.List;
-
-import com.practice.R.string;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,16 +14,10 @@ import android.widget.TextView;
 
 public class TripBaseAdapter extends BaseAdapter{
 
-	//private List<Trip> trips;
-	private int resource;
 	private ListView listview;
 	private LayoutInflater mInflater;
 	Context context;
 	
-	private TextView idTextView;
-	private TextView timeTextView;
-	private ImageView photoImageView;	
-	private TextView keywordTextView;
 	private Cursor cursor;
 	
 	public TripBaseAdapter(Context context,ListView listView,Cursor cursor){
@@ -36,13 +26,11 @@ public class TripBaseAdapter extends BaseAdapter{
 		this.context=context;
 		this.cursor=cursor;
 		mInflater=LayoutInflater.from(context);
-		System.out.println("========tripbaseadapter builder");
 	}
 	
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		System.out.println("========tripbaseadapter getcount:"+cursor.getCount());
 		//return trips.size();
 		return cursor.getCount();
 	}
@@ -53,23 +41,19 @@ public class TripBaseAdapter extends BaseAdapter{
 		if (position >= getCount()) {
 			return null;
 		}
-		System.out.println("========tripbaseadapter getposition");
 		return position;
 	}
 
 	@Override
 	public long getItemId(int position) {
 		// TODO Auto-generated method stub
-		System.out.println("========tripbaseadapter getitem");
 		return position;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		System.out.println("========before move position");
 		cursor.moveToPosition(position);
-		System.out.println("========after move position");
 		ViewHolder viewholder=null;
 		if(convertView==null){
 			convertView = mInflater.inflate(R.layout.tripshow_line, null);
@@ -79,22 +63,24 @@ public class TripBaseAdapter extends BaseAdapter{
 			viewholder.timeTextView=(TextView)convertView.findViewById(R.id.triplist_starttime_text);*/
 			viewholder.photoImageView = (ImageView)convertView.findViewById(R.id.tripshow_pic);
 			viewholder.keywordTextView=(TextView)convertView.findViewById(R.id.tripshow_pic_description);
+			viewholder.latiTextView=(TextView)convertView.findViewById(R.id.tripshow_lati);			
+			viewholder.longiTextView=(TextView)convertView.findViewById(R.id.tripshow_longi);			
 			convertView.setTag(viewholder);
 		}else{
 			viewholder = (ViewHolder) convertView.getTag();
 		}
         //Bitmap bm = decodeBitmap(trip.getImagepath());
 		Bitmap bm = decodeBitmap(cursor.getString(8));
-		System.out.println("========path:"+cursor.getString(8));
         viewholder.photoImageView.setImageBitmap(bm);
-		System.out.println("========before set text");
 		viewholder.keywordTextView.setText(cursor.getString(3));
-		System.out.println("========text:"+cursor.getString(3));
+		viewholder.latiTextView.setText(Integer.parseInt(cursor.getString(5))*1E-6+"");
+		System.out.println("========latinum"+Integer.parseInt(cursor.getString(5))*1E-6+"");
+		viewholder.longiTextView.setText(Integer.parseInt(cursor.getString(6))*1E-6+"");
 		return convertView;
 	}
 	
 	static class ViewHolder {
-		TextView idTextView,nameTextView,timeTextView,endtimeTextView,keywordTextView;
+		TextView idTextView,nameTextView,timeTextView,endtimeTextView,keywordTextView,latiTextView,longiTextView;
 		ImageView photoImageView;
 	}
 	
