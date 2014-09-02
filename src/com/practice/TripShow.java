@@ -33,7 +33,7 @@ public class TripShow extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.trip_show);
+		setContentView(R.layout.trip_show); 
 		//triplist传递的旅程的_id值
 		Intent camIntent=this.getIntent();
 		tripname=camIntent.getStringExtra("tripName");

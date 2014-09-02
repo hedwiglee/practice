@@ -68,8 +68,8 @@ public final class R {
         public static final int radioGroup=0x7f080001;
         public static final int result_text=0x7f080022;
         public static final int sView=0x7f080023;
-        public static final int save_detail=0x7f08001e;
-        public static final int speak_start=0x7f08001b;
+        public static final int save_detail=0x7f08001b;
+        public static final int speak_start=0x7f08001e;
         public static final int take_picture=0x7f080024;
         public static final int textcache=0x7f080007;
         public static final int thumbnail=0x7f08001a;
@@ -100,17 +100,18 @@ public final class R {
         public static final int line=0x7f030005;
         public static final int main=0x7f030006;
         public static final int map_main=0x7f030007;
-        public static final int new_trip=0x7f030008;
-        public static final int photo_list=0x7f030009;
-        public static final int pic_detail=0x7f03000a;
-        public static final int pocketsphinx=0x7f03000b;
-        public static final int save=0x7f03000c;
-        public static final int tab_listener=0x7f03000d;
-        public static final int take_photo=0x7f03000e;
-        public static final int trip_list=0x7f03000f;
-        public static final int trip_show=0x7f030010;
-        public static final int triplist_line=0x7f030011;
-        public static final int tripshow_line=0x7f030012;
+        public static final int map_popup=0x7f030008;
+        public static final int new_trip=0x7f030009;
+        public static final int photo_list=0x7f03000a;
+        public static final int pic_detail=0x7f03000b;
+        public static final int pocketsphinx=0x7f03000c;
+        public static final int save=0x7f03000d;
+        public static final int tab_listener=0x7f03000e;
+        public static final int take_photo=0x7f03000f;
+        public static final int trip_list=0x7f030010;
+        public static final int trip_show=0x7f030011;
+        public static final int triplist_line=0x7f030012;
+        public static final int tripshow_line=0x7f030013;
     }
     public static final class menu {
         public static final int dummy=0x7f070000;

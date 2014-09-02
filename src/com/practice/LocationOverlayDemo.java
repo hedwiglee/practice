@@ -4,16 +4,18 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,8 +30,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.BMapManager;
-import com.baidu.mapapi.map.Ground;
-import com.baidu.mapapi.map.GroundOverlay;
 import com.baidu.mapapi.map.ItemizedOverlay;
 import com.baidu.mapapi.map.LocationData;
 import com.baidu.mapapi.map.MapController;
@@ -60,14 +60,13 @@ public class LocationOverlayDemo extends Fragment {
 	double mLon1 = 116.364921 ;
 	double mLat1 = 39.967079 ;
 	private MyOverlay mOverlay = null;
-	private OverlayItem mCurItem = null;
 	private ArrayList<OverlayItem>  mItems = null; 
+	private OverlayItem mCurItem = null;
 	private View viewCache = null;
 	private View popupInfo = null;
 	private View popupLeft = null;
 	private View popupRight = null;
 	private Button button = null;
-	private MapView.LayoutParams layoutParam = null;
 	// 定位相关
 	LocationClient mLocClient;
 	LocationData locData = null;
@@ -244,6 +243,7 @@ public class LocationOverlayDemo extends Fragment {
   		}
   		@Override
   		protected boolean dispatchTap() {
+  			System.out.println("=======dispatchTap");
   			// TODO Auto-generated method stub
   			//处理点击事件,弹出泡泡
   			popupText.setBackgroundResource(R.drawable.popup);
@@ -265,7 +265,7 @@ public class LocationOverlayDemo extends Fragment {
         mMapView.getController().enableClick(true);
         mMapView.setBuiltInZoomControls(true);
         //创建 弹出泡泡图层
-        //createPaopao();
+        createPaopao();
       //定位图层初始化
   		myLocationOverlay = new locationOverlay(mMapView);
   		//设置定位数据
@@ -388,9 +388,10 @@ public class LocationOverlayDemo extends Fragment {
           /**
            * 创建一个popupoverlay
            */
-          /*PopupClickListener popListener = new PopupClickListener(){
+          PopupClickListener popListener = new PopupClickListener(){
  			@Override
  			public void onClickedPopup(int index) {
+ 	        	System.out.println("======392 pop listener");
  				if ( index == 0){
  					//更新item位置
  				      pop.hidePop();
@@ -402,16 +403,30 @@ public class LocationOverlayDemo extends Fragment {
  				}
  				else if(index == 2){
  					//更新图标
- 					mCurItem.setMarker(getResources().getDrawable(R.drawable.nav_turn_via_1));
+ 					mCurItem.setMarker(getResources().getDrawable(R.drawable.icon_marka));
  					mOverlay.updateItem(mCurItem);
  				    mMapView.refresh();
  				}
  			}
           };
-          */
+          
           //pop = new PopupOverlay(mMapView,popListener);        
           System.out.println("========end initoverlay");
      }
+     
+     public void createPaopao(){
+ 		viewCache = getActivity().getLayoutInflater().inflate(R.layout.map_popup, null);
+         popupText =(TextView) viewCache.findViewById(R.id.textcache);
+         //泡泡点击响应回调
+         PopupClickListener popListener = new PopupClickListener(){
+ 			@Override
+ 			public void onClickedPopup(int index) {
+ 				Log.v("click", "clickapoapo");
+ 			}
+         };
+         pop = new PopupOverlay(mMapView,popListener);
+         MyLocationMapView.pop = pop;
+ 	}
      
      public class MyOverlay extends ItemizedOverlay{
 
@@ -421,12 +436,19 @@ public class LocationOverlayDemo extends Fragment {
 
  		@Override
  		public boolean onTap(int index){
- 			OverlayItem item = getItem(index);
- 			mCurItem = item ;
+  			System.out.println("=======onTap 437");
+  			OverlayItem item = getItem(index);
+  			mCurItem = item ;
+  			popupText.setBackgroundResource(R.drawable.popup);
+			popupText.setText("我的位置");
+			pop.showPopup(BMapUtil.getBitmapFromView(popupText),
+					new GeoPoint((int)(mCurItem.getPoint().getLatitudeE6()), (int)(mCurItem.getPoint().getLongitudeE6())), 8);
+  			
+ 			/*OverlayItem item = getItem(index);
  			if (index == 3){
  				button.setText("这是一个系统控件");
- 				/*GeoPoint pt = new GeoPoint((int) (mLat4 * 1E6),
- 						(int) (mLon4 * 1E6));*/
+ 				GeoPoint pt = new GeoPoint((int) (mLat4 * 1E6),
+ 						(int) (mLon4 * 1E6));
  				// 弹出自定义View
  				//pop.showPopup(button, pt, 32);
  			}
@@ -438,7 +460,7 @@ public class LocationOverlayDemo extends Fragment {
  				    BMapUtil.getBitmapFromView(popupRight) 		
  			    };
  			    pop.showPopup(bitMaps,item.getPoint(),32);
- 			}
+ 			}*/
  			return true;
  		}
  		
@@ -511,4 +533,33 @@ public class LocationOverlayDemo extends Fragment {
     	super.onSaveInstanceState(outState);
     	mMapView.onSaveInstanceState(outState);    	
     }  
+}
+
+/**
+ * 继承MapView重写onTouchEvent实现泡泡处理操作
+ * @author hejin
+ *
+ */
+class MyLocationMapView extends MapView{
+	static PopupOverlay   pop  = null;//弹出泡泡图层，点击图标使用
+	public MyLocationMapView(Context context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
+	public MyLocationMapView(Context context, AttributeSet attrs){
+		super(context,attrs);
+	}
+	public MyLocationMapView(Context context, AttributeSet attrs, int defStyle){
+		super(context, attrs, defStyle);
+	}
+	@Override
+    public boolean onTouchEvent(MotionEvent event){
+		System.out.println("=======onTouchEvent 548");
+		if (!super.onTouchEvent(event)){
+			//消隐泡泡
+			if (pop != null && event.getAction() == MotionEvent.ACTION_UP)
+				pop.hidePop();
+		}
+		return true;
+	}
 }

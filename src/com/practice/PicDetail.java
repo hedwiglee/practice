@@ -256,12 +256,12 @@ public class PicDetail extends Activity implements RecognitionListener{
         File modelsDir = new File(assetsDir, "models");
         recognizer = defaultSetup()
                 .setAcousticModel(new File(modelsDir, "hmm/tdt_sc_8k"))
-                .setDictionary(new File(modelsDir, "lm/20_regular_words.dic"))
+                .setDictionary(new File(modelsDir, "lm/50_regular_words.dic"))
                 .setRawLogDir(assetsDir).setKeywordThreshold(1e-5f)
                 .getRecognizer();
         recognizer.addListener(this);
 
-        File kwsFile=new File(modelsDir,"kws/20_regular_kws.txt");
+        File kwsFile=new File(modelsDir,"kws/50_regular_kws.txt");
         recognizer.addKeywordSearch(KWS_SEARCH, kwsFile);
     }      
     
