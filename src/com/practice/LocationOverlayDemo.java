@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -63,9 +65,6 @@ public class LocationOverlayDemo extends Fragment {
 	private ArrayList<OverlayItem>  mItems = null; 
 	private OverlayItem mCurItem = null;
 	private View viewCache = null;
-	private View popupInfo = null;
-	private View popupLeft = null;
-	private View popupRight = null;
 	private Button button = null;
 	// 定位相关
 	LocationClient mLocClient;
@@ -77,6 +76,8 @@ public class LocationOverlayDemo extends Fragment {
 	//弹出泡泡图层
 	private PopupOverlay   pop  = null;//弹出泡泡图层，浏览节点时使用
 	private TextView  popupText = null;//泡泡view
+	private ImageView popupPhoto=null;
+	private Bitmap photoBitmap=null;
 	
 	//地图相关，使用继承MapView的MapView目的是重写touch事件实现泡泡处理
 	//如果不处理touch事件，则无需继承，直接使用MapView即可
@@ -96,6 +97,8 @@ public class LocationOverlayDemo extends Fragment {
 	private ArrayList<Double> longiArray=new ArrayList<Double>();
 	private double loclati;
 	private double loclongi;
+	private String keyword;
+	private String photoPath;
 	
 	@Override  
     public void onAttach(Activity activity) {  
@@ -347,7 +350,9 @@ public class LocationOverlayDemo extends Fragment {
  	        	longiArray.add(loclongi);
          		System.out.println("坐标："+loclati+"  "+loclongi);
              	GeoPoint p1 = new GeoPoint ((int)(loclati*1E6),(int)(loclongi*1E6));
-	             OverlayItem item1 = new OverlayItem(p1,"覆盖物1","");
+             	keyword=cursor.getString(3);
+             	photoPath=cursor.getString(8);
+	             OverlayItem item1 = new OverlayItem(p1,keyword,photoPath);
 	             item1.setMarker(getResources().getDrawable(R.drawable.icon_marka));  
 	             System.out.println("=========set marker");
 	             /**
@@ -385,10 +390,7 @@ public class LocationOverlayDemo extends Fragment {
           /*button = new Button(this);
           button.setBackgroundResource(R.drawable.popup);*/
           
-          /**
-           * 创建一个popupoverlay
-           */
-          PopupClickListener popListener = new PopupClickListener(){
+          new PopupClickListener(){
  			@Override
  			public void onClickedPopup(int index) {
  	        	System.out.println("======392 pop listener");
@@ -415,8 +417,9 @@ public class LocationOverlayDemo extends Fragment {
      }
      
      public void createPaopao(){
- 		viewCache = getActivity().getLayoutInflater().inflate(R.layout.map_popup, null);
-         popupText =(TextView) viewCache.findViewById(R.id.textcache);
+ 		 viewCache = getActivity().getLayoutInflater().inflate(R.layout.map_popup, null);
+         popupText =(TextView) viewCache.findViewById(R.id.popright);
+         popupPhoto=(ImageView)viewCache.findViewById(R.id.pop_photo);
          //泡泡点击响应回调
          PopupClickListener popListener = new PopupClickListener(){
  			@Override
@@ -439,10 +442,16 @@ public class LocationOverlayDemo extends Fragment {
   			System.out.println("=======onTap 437");
   			OverlayItem item = getItem(index);
   			mCurItem = item ;
-  			popupText.setBackgroundResource(R.drawable.popup);
-			popupText.setText("我的位置");
-			pop.showPopup(BMapUtil.getBitmapFromView(popupText),
-					new GeoPoint((int)(mCurItem.getPoint().getLatitudeE6()), (int)(mCurItem.getPoint().getLongitudeE6())), 8);
+  			//popupText.setBackgroundResource(R.drawable.popup);
+			//popupText.setText(mCurItem.getSnippet());
+			photoBitmap=decodeBitmap(mCurItem.getSnippet(),300);
+			popupPhoto.setImageBitmap(photoBitmap);
+			popupText.setText(mCurItem.getTitle());
+			Bitmap[] bitMaps={
+				    BMapUtil.getBitmapFromView(popupPhoto), 		
+				    BMapUtil.getBitmapFromView(popupText)
+			    };
+			pop.showPopup(bitMaps,new GeoPoint((int)(mCurItem.getPoint().getLatitudeE6()), (int)(mCurItem.getPoint().getLongitudeE6())), 8);
   			
  			/*OverlayItem item = getItem(index);
  			if (index == 3){
@@ -474,6 +483,42 @@ public class LocationOverlayDemo extends Fragment {
  		}
      	
      }
+     
+     public static Bitmap decodeBitmap(String path, int compareSize) {
+ 		BitmapFactory.Options options = new BitmapFactory.Options();
+ 		options.inJustDecodeBounds = true;
+ 		// 通过这个bitmap获取图片的宽和高
+ 		Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+ 		if (bitmap == null) {
+ 			System.out.println("bitmap为空");
+ 		}
+ 		float realWidth = options.outWidth;
+ 		float realHeight = options.outHeight;
+ 		System.out.println("真实图片高度：" + realHeight + "宽度:" + realWidth);
+ 		// 计算缩放比
+ 		int scale = (int) ((realHeight > realWidth ? realHeight : realWidth) / compareSize);
+ 		if (scale <= 0) {
+ 			scale = 1;
+ 		}
+ 		options.inSampleSize = scale;
+ 		options.inJustDecodeBounds = false;
+ 		// 注意这次要把options.inJustDecodeBounds 设为 false,这次图片是要读取出来的。
+ 		bitmap = BitmapFactory.decodeFile(path, options);
+ 		int w = bitmap.getWidth();
+ 		int h = bitmap.getHeight();
+ 		System.out.println("缩略图高度：" + h + "宽度:" + w);
+ 		return bitmap;
+ 	}
+
+ 	/**
+ 	 * 快捷的返回 100像素的小图像。
+ 	 * 
+ 	 * @param path
+ 	 * @return
+ 	 */
+ 	public static Bitmap decodeBitmap(String path) {
+ 		return decodeBitmap(path, 300);
+ 	}	
      
   	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
