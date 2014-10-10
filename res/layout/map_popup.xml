@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:orientation="horizontal"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    >
-
-   
-     <LinearLayout 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="vertical"
-	    android:id="@+id/popinfo"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
 	    >
 
          <ImageView
@@ -19,28 +11,27 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:src="@drawable/icon_geo" />
-    
-     <TextView
-        android:id="@+id/popdown"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/popup_down"
-        android:textColor="@android:color/black"
-        android:textSize="12sp" />
-    
-    
-    </LinearLayout>
 
-     
-    <TextView
-        android:id="@+id/popright"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/popup_side"
-        android:textColor="#3814ed"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:text="更新marker"
-        android:textSize="12sp" />
+         <TextView
+             android:id="@+id/popright"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:background="@drawable/popup_side"
+             android:layout_below="@id/pop_photo"
+             android:gravity="center"
+             android:text="更新marker"
+             android:textColor="#3814ed"
+             android:textSize="12sp"
+             android:textStyle="bold" />
 
-</LinearLayout>
+         <TextView
+             android:id="@+id/popdown"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_alignRight="@+id/popright"
+             android:layout_below="@id/popright"
+             android:background="@drawable/popup_down"
+             android:textColor="@android:color/black"
+             android:textSize="12sp" />
+
+</RelativeLayout>

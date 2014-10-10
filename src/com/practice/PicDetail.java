@@ -4,8 +4,8 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
-
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -18,6 +18,16 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationOverlay;
 import com.baidu.mapapi.map.PopupOverlay;
 import com.baidu.mapapi.map.MyLocationOverlay.LocationMode;
+import com.baidu.mapapi.search.MKAddrInfo;
+import com.baidu.mapapi.search.MKBusLineResult;
+import com.baidu.mapapi.search.MKDrivingRouteResult;
+import com.baidu.mapapi.search.MKPoiResult;
+import com.baidu.mapapi.search.MKSearch;
+import com.baidu.mapapi.search.MKSearchListener;
+import com.baidu.mapapi.search.MKShareUrlResult;
+import com.baidu.mapapi.search.MKSuggestionResult;
+import com.baidu.mapapi.search.MKTransitRouteResult;
+import com.baidu.mapapi.search.MKWalkingRouteResult;
 import com.baidu.platform.comapi.basestruct.GeoPoint;
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -34,8 +44,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,7 +58,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 /*
  * 为所拍摄的照片添加详情
  * */
-public class PicDetail extends Activity implements RecognitionListener{    
+public class PicDetail extends Activity implements OnTouchListener,RecognitionListener{    
 	//照片相关
 	private ImageView photoview;
 	SQLiteDatabase db;
@@ -81,6 +93,9 @@ public class PicDetail extends Activity implements RecognitionListener{
 	//如果不处理touch事件，则无需继承，直接使用MapView即可
 	MapView mMapView = null;	// 地图View
 	private MapController mMapController = null;
+	private MKSearch mSearch = null;	// 搜索模块
+	private MySearchListener searchListener;
+	private String locationString=null;
 	//UI相关
 	OnCheckedChangeListener radioButtonListener = null;
 	Button requestLocButton = null;
@@ -163,7 +178,7 @@ public class PicDetail extends Activity implements RecognitionListener{
         mLocClient.start();
         mLocClient.requestLocation();
         
-      //定位图层初始化
+        //定位图层初始化
   		myLocationOverlay = new locationOverlay(mMapView);
   		//设置定位数据
   	    myLocationOverlay.setData(locData);
@@ -179,6 +194,7 @@ public class PicDetail extends Activity implements RecognitionListener{
         startButton=(Button)findViewById(R.id.speak_start);
         // Recognizer initialization is a time-consuming and it involves IO,
         // so we execute it in async task	        	 
+        startButton.setOnTouchListener(this);
 		new AsyncTask<Void, Void, Exception>() {
             @Override
             protected Exception doInBackground(Void... params) {
@@ -218,7 +234,7 @@ public class PicDetail extends Activity implements RecognitionListener{
 		}    
 	}	
 	
-	//语音识别模块
+	//语音识别模块======================================================================
 	@Override
     public void onPartialResult(Hypothesis hypothesis) {
         String text = hypothesis.getHypstr();
@@ -265,6 +281,22 @@ public class PicDetail extends Activity implements RecognitionListener{
         recognizer.addKeywordSearch(KWS_SEARCH, kwsFile);
     }      
     
+    //长按事件
+    public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			onBeginningOfSpeech();
+		case MotionEvent.ACTION_UP:
+			onEndOfSpeech();
+			break;
+		default:
+			;
+		}
+		/* Let the button handle its own state */
+		return false;
+	}
+    
+    //定位相关===================================================================
     /**
      * 手动触发一次定位请求
      */
@@ -314,6 +346,7 @@ public class PicDetail extends Activity implements RecognitionListener{
                 loclong=(int)(locData.longitude*1e6)+"";
                 isRequest = false;
                 myLocationOverlay.setLocationMode(LocationMode.FOLLOWING);
+                changeLocFormat(new GeoPoint((int)(locData.latitude* 1e6),(int)(locData.longitude*1e6)));
 				//requestLocButton.setText("跟随");
                 //mCurBtnType = E_BUTTON_TYPE.FOLLOW;
             }
@@ -363,6 +396,79 @@ public class PicDetail extends Activity implements RecognitionListener{
              mLocClient.requestLocation();
          }
      }
+     
+     //将坐标转换为位置===========================================================
+     /*转换地理位置相关 * 
+ 	 */
+ 	private void changeLocFormat(GeoPoint point){
+ 		mSearch = new MKSearch();
+ 		searchListener=new MySearchListener();
+ 		DemoMap app = (DemoMap)this.getApplication();
+ 		mSearch.init(app.mBMapManager, new MySearchListener());
+ 		mSearch.reverseGeocode(point);	
+ 	}
+ 	
+ 	public class MySearchListener implements MKSearchListener {
+
+        // MKAddrInfo 地址信息类
+        @Override
+        public void onGetAddrResult(MKAddrInfo res, int error) {
+            if (error != 0) {
+                String msg = String.format("错误号：%d ", error);
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)
+                        .show();
+                return;
+            }            
+            if (res.type == MKAddrInfo.MK_REVERSEGEOCODE){
+				//反地理编码：通过坐标点检索详细地址及周边poi
+				String strInfo = res.strAddr;
+				locationString=strInfo;		
+				System.out.println("************locationstring:"+locationString);
+			}
+        }
+
+        @Override
+        public void onGetBusDetailResult(MKBusLineResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetDrivingRouteResult(MKDrivingRouteResult result,
+                int arg1) {
+        }
+
+        @Override
+        public void onGetPoiDetailSearchResult(int arg0, int arg1) {
+
+        }
+
+        @Override
+        public void onGetPoiResult(MKPoiResult result, int type, int error) {
+        }
+
+        public void onGetRGCShareUrlResult(String arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetSuggestionResult(MKSuggestionResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetTransitRouteResult(MKTransitRouteResult arg0, int arg1) {
+        }
+
+        @Override
+        public void onGetWalkingRouteResult(MKWalkingRouteResult arg0, int arg1) {
+        }
+
+		@Override
+		public void onGetShareUrlResult(MKShareUrlResult arg0, int arg1,
+				int arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+    }
+ 	
 
 	@Override
 	public void onStart() {

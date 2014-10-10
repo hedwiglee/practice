@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 public class TripBaseAdapter extends BaseAdapter{
 
-	private ListView listview;
 	private LayoutInflater mInflater;
 	Context context;
 	
@@ -22,10 +21,9 @@ public class TripBaseAdapter extends BaseAdapter{
 	
 	public TripBaseAdapter(Context context,ListView listView,Cursor cursor){
 		this.mInflater=LayoutInflater.from(context);
-		this.listview=listview;
 		this.context=context;
 		this.cursor=cursor;
-		mInflater=LayoutInflater.from(context);
+		mInflater=LayoutInflater.from(context);		
 	}
 	
 	@Override
@@ -118,5 +116,5 @@ public class TripBaseAdapter extends BaseAdapter{
 	 */
 	public static Bitmap decodeBitmap(String path) {
 		return decodeBitmap(path, 300);
-	}	
+	}		
 }
