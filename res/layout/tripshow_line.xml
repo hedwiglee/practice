@@ -27,7 +27,7 @@
         android:textColor="#5c9425"
         android:textStyle="italic"
         android:textSize="5pt"
-        android:text="11111111111" />
+        android:text="" />
 
     <TextView
         android:id="@+id/tripshow_pic_description"
@@ -49,6 +49,6 @@
         android:textColor="#5c9425"
         android:textStyle="italic"
         android:textSize="5pt"
-        android:text="22222222222" />
+        android:text="" />
 
 </RelativeLayout>

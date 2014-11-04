@@ -70,10 +70,12 @@ public class TripBaseAdapter extends BaseAdapter{
         //Bitmap bm = decodeBitmap(trip.getImagepath());
 		Bitmap bm = decodeBitmap(cursor.getString(8));
         viewholder.photoImageView.setImageBitmap(bm);
+        System.out.println("========photoimageview");
 		viewholder.keywordTextView.setText(cursor.getString(3));
-		viewholder.latiTextView.setText(Integer.parseInt(cursor.getString(5))*1E-6+"");
+		/*viewholder.latiTextView.setText(Integer.parseInt(cursor.getString(5))*1E-6+"");
 		System.out.println("========latinum"+Integer.parseInt(cursor.getString(5))*1E-6+"");
-		viewholder.longiTextView.setText(Integer.parseInt(cursor.getString(6))*1E-6+"");
+		viewholder.longiTextView.setText(Integer.parseInt(cursor.getString(6))*1E-6+"");*/
+		viewholder.latiTextView.setText(cursor.getString(7));
 		return convertView;
 	}
 	

@@ -207,6 +207,7 @@ public class TakePhoto extends Activity implements SensorEventListener{
 			// Android123建议大家如何出现了内存不足异常，最好return 原始的bitmap对象。.
 			}
 		}
+		b=decodeBitmap(b,2);
 		return b;
 	}
 		
@@ -315,5 +316,23 @@ public class TakePhoto extends Activity implements SensorEventListener{
 	protected void onStop() {
 		mSensorManager.unregisterListener(this);
 		super.onStop();
+	}
+	
+	public static Bitmap decodeBitmap(Bitmap bitmap, int compareSize) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		float realWidth = options.outWidth;
+		float realHeight = options.outHeight;
+		// 计算缩放比
+		int scale = (int) ((realHeight > realWidth ? realHeight : realWidth) / compareSize);
+		if (scale <= 0) {
+			scale = 1;
+		}
+		options.inSampleSize = scale;
+		options.inJustDecodeBounds = false;
+		// 注意这次要把options.inJustDecodeBounds 设为 false,这次图片是要读取出来的。
+		int w = bitmap.getWidth();
+		int h = bitmap.getHeight();
+		System.out.println("缩略图高度：" + h + "宽度:" + w);
+		return bitmap;
 	}
 }

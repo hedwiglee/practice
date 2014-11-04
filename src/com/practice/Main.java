@@ -17,7 +17,6 @@ public class Main extends FragmentActivity implements ActionBar.TabListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("main oncreate");
 		final ActionBar actionBar=getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		

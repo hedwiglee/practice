@@ -23,6 +23,7 @@ public class PhotoList extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		System.out.println("======enter PhotoList");
 		setContentView(R.layout.photo_list);
 		
 		File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");

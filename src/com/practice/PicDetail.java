@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -138,19 +139,26 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 				// 获取用户输入
 				String description=((EditText)findViewById(R.id.photo_description)).getText().toString();
 				try {
-					insertData(db, description, photoname, loclati, loclong);
+					System.out.println("======picdetail try");
+					insertData(db, description, photoname, loclati, loclong,locationString);
+					System.out.println("======picdetail try");
 					//启动新activity
 	    			Intent intent = new Intent();
 	    			intent.setClass(PicDetail.this, PhotoList.class);
 	    			startActivity(intent);
 				}
 				catch(SQLException e) {
+					System.out.println("======picdetail catch");
 					db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
 								"photo_time date," +
 								"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 								"photo_loclongi int,photo_place varchar(100)," +
 								"photo_path varchar(150))");
-					insertData(db, description, photoname, loclati, loclong);
+					insertData(db, description, photoname, loclati, loclong,locationString);
+					//启动新activity
+	    			Intent intent = new Intent();
+	    			intent.setClass(PicDetail.this, PhotoList.class);
+	    			startActivity(intent);
 				}
 			}
 		});        
@@ -219,8 +227,14 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
         }.execute();		          
 	}	
 
-	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi){
-		db.execSQL("insert into pic_info values (null,1,null,?,null,?,?,null,?)",new String[] {description,lati,longi,path});
+	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi,String place){
+		Cursor cur;
+		cur=db.rawQuery("select * from trip_list order by _id desc limit 0,1", null);
+		System.out.println("=========cur:"+cur);
+		cur.moveToPosition(0);
+		String index=cur.getString(0);
+		System.out.println("=========indexxxxx:"+index);
+		db.execSQL("insert into pic_info values (null,"+index+",null,?,null,?,?,?,?)",new String[] {description,lati,longi,place,path});
 	}
 	
 	@Override

@@ -80,9 +80,11 @@ public class TripList extends Fragment {
     			intent.setClass(getActivity(), TripShow.class);
     			Bundle bundle = new Bundle();
     			//tripnameText=(TextView)findViewById(R.id.triplist_id_hidden);
-    			tripnameText=(TextView)list.getChildAt(position).findViewById(R.id.triplist_id_hidden);
+    			//list=(ListView)v.findViewById(R.id.trip_list_view);
+    			tripnameText=(TextView)list.getChildAt(position-list.getFirstVisiblePosition()).findViewById(R.id.triplist_id_hidden);
+    			System.out.println("===========after find");
     			tripName=tripnameText.getText().toString();
-    			System.out.println("triplist.java tripname:"+tripName);
+    			System.out.println("===========triplist.java tripname:"+tripName);
     	        bundle.putString("tripName", tripName);
     	        intent.putExtra("tripName",tripName);
     	        tripName=null;
