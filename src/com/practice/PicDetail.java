@@ -149,7 +149,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 				}
 				catch(SQLException e) {
 					System.out.println("======picdetail catch");
-					db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+					db.execSQL("create table pic_info(_id integer primary key autoincrement,tour_id integer," +
 								"photo_time date," +
 								"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 								"photo_loclongi int,photo_place varchar(100)," +
@@ -232,7 +232,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		cur=db.rawQuery("select * from trip_list order by _id desc limit 0,1", null);
 		System.out.println("=========cur:"+cur);
 		cur.moveToPosition(0);
-		String index=cur.getString(0);
+		String index=cur.getString(0);//选择最后一个旅程的旅程id
 		System.out.println("=========indexxxxx:"+index);
 		db.execSQL("insert into pic_info values (null,"+index+",null,?,null,?,?,?,?)",new String[] {description,lati,longi,place,path});
 	}

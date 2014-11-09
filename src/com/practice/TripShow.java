@@ -86,15 +86,15 @@ public class TripShow extends Activity {
 		
 		//读取图片列表和相应描述
 		try {
-			cursor=db.rawQuery("select * from pic_info", null);
+			cursor=db.rawQuery("select * from pic_info where integer="+tripname, null);
 		}
 		catch (Exception e) {
-			db.execSQL("create table pic_info(_id integer primary key autoincrement,integer tour_id," +
+			db.execSQL("create table pic_info(_id integer primary key autoincrement,tour_id integer," +
 					"photo_time date," +
 					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 					"photo_loclongi int,photo_place varchar(100)," +
 					"photo_path varchar(150))");
-			cursor=db.rawQuery("select * from pic_info", null);
+			cursor=db.rawQuery("select * from pic_info where integer="+tripname, null);
 		}		
 		System.out.println(cursor.getCount());
 		/*String[] title={"pic_description"};
