@@ -216,6 +216,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
                 return null;
             }
 
+            //后台进程完成后调用，原来默认的是加载完资源启动，这里试试onclick放到里面
             @Override
             protected void onPostExecute(Exception result) {
                 if (result != null) {
@@ -227,15 +228,6 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
         }.execute();		          
 	}	
 
-	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi,String place){
-		Cursor cur;
-		cur=db.rawQuery("select * from trip_list order by _id desc limit 0,1", null);
-		System.out.println("=========cur:"+cur);
-		cur.moveToPosition(0);
-		String index=cur.getString(0);//选择最后一个旅程的旅程id
-		System.out.println("=========indexxxxx:"+index);
-		db.execSQL("insert into pic_info values (null,"+index+",null,?,null,?,?,?,?)",new String[] {description,lati,longi,place,path});
-	}
 	
 	@Override
 	public void onDestroy() {		
@@ -248,11 +240,24 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		}    
 	}	
 	
+	//数据库模块=======================================================================
+
+	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi,String place){
+		Cursor cur;
+		cur=db.rawQuery("select * from trip_list order by _id desc limit 0,1", null);
+		System.out.println("=========cur:"+cur);
+		cur.moveToPosition(0);
+		String index=cur.getString(0);//选择最后一个旅程的旅程id
+		System.out.println("=========indexxxxx:"+index);
+		db.execSQL("insert into pic_info values (null,"+index+",null,?,null,?,?,?,?)",new String[] {description,lati,longi,place,path});
+	}
+	
 	//语音识别模块======================================================================
 	@Override
     public void onPartialResult(Hypothesis hypothesis) {
         String text = hypothesis.getHypstr();
         ((TextView) findViewById(R.id.photo_description)).setText(text);
+        System.out.println("============onPartialResult");
     }
 
     @Override
@@ -261,6 +266,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
             String text = hypothesis.getHypstr();
             //makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             ((TextView) findViewById(R.id.photo_description)).setText(text);
+            System.out.println("============onResult");
         }
     }
 
@@ -300,13 +306,16 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			onBeginningOfSpeech();
+			startButton.setText("结束识别");
 		case MotionEvent.ACTION_UP:
 			onEndOfSpeech();
+			startButton.setText("开始识别");
 			break;
 		default:
 			;
 		}
 		/* Let the button handle its own state */
+		System.out.println("=========tttttttttttttttouch:"+event.getAction());
 		return false;
 	}
     
