@@ -1,9 +1,15 @@
 package com.practice;
 
+import java.io.File;
+import java.io.IOException;
+
+import edu.cmu.pocketsphinx.Assets;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.text.StaticLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +53,13 @@ public class TripBaseAdapter extends BaseAdapter{
 		// TODO Auto-generated method stub
 		return position;
 	}
-
+	static ViewHolder viewholder;
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		cursor.moveToPosition(position);
-		ViewHolder viewholder=null;
+		//ViewHolder viewholder=null;
+		viewholder=null;
 		if(convertView==null){
 			convertView = mInflater.inflate(R.layout.tripshow_line, null);
 			viewholder=new ViewHolder();
@@ -67,18 +74,17 @@ public class TripBaseAdapter extends BaseAdapter{
 		}else{
 			viewholder = (ViewHolder) convertView.getTag();
 		}
-        //Bitmap bm = decodeBitmap(trip.getImagepath());
-		Bitmap bm = decodeBitmap(cursor.getString(8));
-        viewholder.photoImageView.setImageBitmap(bm);
         System.out.println("========photoimageview");
 		viewholder.keywordTextView.setText(cursor.getString(3));
 		/*viewholder.latiTextView.setText(Integer.parseInt(cursor.getString(5))*1E-6+"");
 		System.out.println("========latinum"+Integer.parseInt(cursor.getString(5))*1E-6+"");
 		viewholder.longiTextView.setText(Integer.parseInt(cursor.getString(6))*1E-6+"");*/
+		viewholder.photoImageView.setTag(cursor.getString(8));
 		viewholder.latiTextView.setText(cursor.getString(7));
+		new ImageAsynctask(viewholder.photoImageView, cursor.getString(8), viewholder).execute();
 		return convertView;
 	}
-	
+		
 	static class ViewHolder {
 		TextView idTextView,nameTextView,timeTextView,endtimeTextView,keywordTextView,latiTextView,longiTextView;
 		ImageView photoImageView;

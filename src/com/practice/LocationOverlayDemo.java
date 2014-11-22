@@ -323,7 +323,8 @@ public class LocationOverlayDemo extends Fragment {
      	 
      	File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
  		if (!filepath.exists()){
- 			filepath.mkdir();
+ 			filepath.mkdirs();
+ 			System.out.println("==========make dir");
  		}
      	db=SQLiteDatabase.openOrCreateDatabase(filepath+"/travelbook.db3", null);
          try {

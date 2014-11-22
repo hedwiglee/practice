@@ -219,11 +219,11 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
             //后台进程完成后调用，原来默认的是加载完资源启动，这里试试onclick放到里面
             @Override
             protected void onPostExecute(Exception result) {
-                if (result != null) {
+                /*if (result != null) {
                     //((TextView) findViewById(R.id.caption_text)).setText("Failed to init recognizer " + result);
                 } else {
                     switchSearch(KWS_SEARCH);
-                }
+                }*/
             }
         }.execute();		          
 	}	
@@ -307,9 +307,12 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		case MotionEvent.ACTION_DOWN:
 			onBeginningOfSpeech();
 			startButton.setText("结束识别");
+			switchSearch(KWS_SEARCH);
+			break;
 		case MotionEvent.ACTION_UP:
 			onEndOfSpeech();
 			startButton.setText("开始识别");
+			recognizer.stop();
 			break;
 		default:
 			;
