@@ -21,19 +21,21 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_action_camera=0x7f020000;
-        public static final int ic_action_new=0x7f020001;
-        public static final int ic_action_search=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int icon_geo=0x7f020004;
-        public static final int icon_marka=0x7f020005;
-        public static final int popup=0x7f020006;
-        public static final int popup_down=0x7f020007;
-        public static final int popup_middle=0x7f020008;
-        public static final int popup_side=0x7f020009;
-        public static final int select=0x7f02000a;
-        public static final int select_tab=0x7f02000b;
-        public static final int tab_style=0x7f02000c;
+        public static final int before_title=0x7f020000;
+        public static final int ic_action_camera=0x7f020001;
+        public static final int ic_action_new=0x7f020002;
+        public static final int ic_action_search=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
+        public static final int icon_geo=0x7f020005;
+        public static final int icon_marka=0x7f020006;
+        public static final int popup=0x7f020007;
+        public static final int popup_down=0x7f020008;
+        public static final int popup_middle=0x7f020009;
+        public static final int popup_side=0x7f02000a;
+        public static final int radiuscircle=0x7f02000b;
+        public static final int select=0x7f02000c;
+        public static final int select_tab=0x7f02000d;
+        public static final int tab_style=0x7f02000e;
     }
     public static final class id {
         public static final int action_camera=0x7f080038;
