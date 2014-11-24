@@ -36,11 +36,13 @@ public final class R {
         public static final int select=0x7f02000c;
         public static final int select_tab=0x7f02000d;
         public static final int tab_style=0x7f02000e;
+        public static final int take=0x7f02000f;
     }
     public static final class id {
-        public static final int action_camera=0x7f080038;
-        public static final int action_new=0x7f080037;
-        public static final int action_settings=0x7f080036;
+        public static final int action_camera=0x7f080039;
+        public static final int action_new=0x7f080038;
+        public static final int action_settings=0x7f080037;
+        public static final int before_title_img=0x7f08002c;
         public static final int bmapView=0x7f080000;
         public static final int bmapsView=0x7f08000a;
         public static final int button1=0x7f080004;
@@ -80,18 +82,18 @@ public final class R {
         public static final int thumbnail=0x7f08001b;
         public static final int thumbnail_image=0x7f08002b;
         public static final int trip_list_view=0x7f080026;
-        public static final int triplist_endtime_text=0x7f08002f;
-        public static final int triplist_id_hidden=0x7f080031;
-        public static final int triplist_keyword_text=0x7f080030;
-        public static final int triplist_line_text=0x7f08002e;
-        public static final int triplist_starttime_text=0x7f08002d;
-        public static final int triplist_title_text=0x7f08002c;
+        public static final int triplist_endtime_text=0x7f080030;
+        public static final int triplist_id_hidden=0x7f080032;
+        public static final int triplist_keyword_text=0x7f080031;
+        public static final int triplist_line_text=0x7f08002f;
+        public static final int triplist_starttime_text=0x7f08002e;
+        public static final int triplist_title_text=0x7f08002d;
         public static final int tripshow_isover_text=0x7f080029;
-        public static final int tripshow_lati=0x7f080033;
+        public static final int tripshow_lati=0x7f080034;
         public static final int tripshow_list=0x7f08002a;
-        public static final int tripshow_longi=0x7f080035;
-        public static final int tripshow_pic=0x7f080032;
-        public static final int tripshow_pic_description=0x7f080034;
+        public static final int tripshow_longi=0x7f080036;
+        public static final int tripshow_pic=0x7f080033;
+        public static final int tripshow_pic_description=0x7f080035;
         public static final int tripshow_travelname=0x7f080027;
         public static final int voice_start=0x7f080020;
         public static final int voice_stop=0x7f080021;
