@@ -54,7 +54,7 @@ public final class R {
         public static final int list_lati=0x7f08000d;
         public static final int list_longi=0x7f08000e;
         public static final int list_path=0x7f08000b;
-        public static final int map_picdetail=0x7f08001e;
+        public static final int map_picdetail=0x7f08001d;
         public static final int newtrip_endtime_plain=0x7f080016;
         public static final int newtrip_endtime_text=0x7f080015;
         public static final int newtrip_keywords_plain=0x7f080018;
@@ -64,7 +64,7 @@ public final class R {
         public static final int newtrip_starttime_text=0x7f080013;
         public static final int newtrip_tripname_plain=0x7f080012;
         public static final int newtrip_tripname_text=0x7f080011;
-        public static final int photo_description=0x7f08001d;
+        public static final int photo_description=0x7f08001e;
         public static final int photolist_view=0x7f08001a;
         public static final int pop_photo=0x7f080010;
         public static final int popdown=0x7f080008;
@@ -74,8 +74,8 @@ public final class R {
         public static final int radioGroup=0x7f080001;
         public static final int result_text=0x7f080023;
         public static final int sView=0x7f080024;
-        public static final int save_detail=0x7f08001c;
-        public static final int speak_start=0x7f08001f;
+        public static final int save_detail=0x7f08001f;
+        public static final int speak_start=0x7f08001c;
         public static final int take_picture=0x7f080025;
         public static final int textcache=0x7f080007;
         public static final int thumbnail=0x7f08001b;
