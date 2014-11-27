@@ -69,6 +69,7 @@
         android:id="@+id/triplist_id_hidden"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_alignLeft="@+id/triplist_endtime_text"
         android:layout_alignTop="@+id/triplist_title_text" />
 

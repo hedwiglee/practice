@@ -47,7 +47,6 @@ public class TripList extends Fragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         v = inflater.inflate(R.layout.trip_list, (ViewGroup) getActivity().findViewById(R.id.container), false);
 		list=(ListView)v.findViewById(R.id.trip_list_view);
-		System.out.println("triplist : find listview");
 		
 		File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
 		if (!filepath.exists()){
@@ -65,8 +64,9 @@ public class TripList extends Fragment {
 					"keyword varchar(255),photo_nums integer,trip_location varchar(100),is_over integer)");
 			cursor=db.rawQuery("select * from trip_list", null);
 		}
-		String[] title={"_id","trip_name","keyword"};
-		int[] r_id={R.id.triplist_id_hidden,R.id.triplist_title_text,R.id.triplist_keyword_text};
+		String[] title={"_id","trip_name","start_time","end_time","keyword"};
+		int[] r_id={R.id.triplist_id_hidden,R.id.triplist_title_text,R.id.triplist_starttime_text,
+				R.id.triplist_endtime_text,R.id.triplist_keyword_text};
         adapter = new SimpleAdapter(getActivity(), getData(cursor), R.layout.triplist_line, title, r_id); 
 		/*Context context=getActivity().getApplicationContext();
 		adapter=new TripBaseAdapter(context, R.layout.triplist_line);*/
@@ -103,6 +103,8 @@ public class TripList extends Fragment {
           HashMap<String, String> map = new HashMap<String, String>();
           map.put("_id", result.getString(result.getColumnIndex("_id")));
           map.put("trip_name", result.getString(result.getColumnIndex("trip_name")));
+          map.put("start_time", result.getString(result.getColumnIndex("start_time")));
+          map.put("end_time", result.getString(result.getColumnIndex("end_time")));
           map.put("keyword", result.getString(result.getColumnIndex("keyword")));
           list.add(map);
         }      
