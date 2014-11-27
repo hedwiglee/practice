@@ -30,29 +30,13 @@
         android:text="@string/description_title" />-->
 
     <Button
-        android:id="@+id/save_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/photo_description"
-        android:layout_below="@+id/photo_description"
-        android:text="@string/save_btn" />
-
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/map_picdetail"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/thumbnail"
-        android:clickable="true" >
-    </com.baidu.mapapi.map.MapView>
-
-    <Button
         android:id="@+id/speak_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/map_picdetail"
-        android:layout_below="@+id/map_picdetail"
-        android:layout_marginTop="22dp"
+        android:layout_below="@+id/thumbnail"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/radiuscircle"
         android:text="@string/description_title" />
 
     <EditText
@@ -62,8 +46,27 @@
         android:layout_alignLeft="@+id/speak_start"
         android:layout_below="@+id/speak_start"
         android:layout_marginTop="14dp"
+        android:background="#e7f4f2"
         android:ems="10"
         android:inputType="textMultiLine" />
+    <Button
+        android:id="@+id/save_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/photo_description"
+        android:layout_below="@+id/photo_description"
+        android:background="@drawable/radiuscircle"
+        android:text="@string/save_btn" />
 
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/map_picdetail"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/save_detail"
+        android:clickable="true" >
+    </com.baidu.mapapi.map.MapView>
 </RelativeLayout>
 </ScrollView>

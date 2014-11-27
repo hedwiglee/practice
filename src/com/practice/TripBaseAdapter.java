@@ -69,12 +69,14 @@ public class TripBaseAdapter extends BaseAdapter{
 			viewholder.photoImageView = (ImageView)convertView.findViewById(R.id.tripshow_pic);
 			viewholder.keywordTextView=(TextView)convertView.findViewById(R.id.tripshow_pic_description);
 			viewholder.latiTextView=(TextView)convertView.findViewById(R.id.tripshow_lati);			
-			viewholder.longiTextView=(TextView)convertView.findViewById(R.id.tripshow_longi);			
+			//viewholder.longiTextView=(TextView)convertView.findViewById(R.id.tripshow_longi);	
+			viewholder.pictime=(TextView)convertView.findViewById(R.id.tripshow_pic_time);				
 			convertView.setTag(viewholder);
 		}else{
 			viewholder = (ViewHolder) convertView.getTag();
 		}
         System.out.println("========photoimageview");
+		viewholder.pictime.setText(cursor.getString(2));
 		viewholder.keywordTextView.setText(cursor.getString(3));
 		/*viewholder.latiTextView.setText(Integer.parseInt(cursor.getString(5))*1E-6+"");
 		System.out.println("========latinum"+Integer.parseInt(cursor.getString(5))*1E-6+"");
@@ -86,7 +88,7 @@ public class TripBaseAdapter extends BaseAdapter{
 	}
 		
 	static class ViewHolder {
-		TextView idTextView,nameTextView,timeTextView,endtimeTextView,keywordTextView,latiTextView,longiTextView;
+		TextView idTextView,nameTextView,timeTextView,endtimeTextView,keywordTextView,latiTextView,longiTextView,pictime;
 		ImageView photoImageView;
 	}
 	

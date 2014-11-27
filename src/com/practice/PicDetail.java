@@ -4,6 +4,7 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -44,6 +45,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -139,8 +141,10 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 				// 获取用户输入
 				String description=((EditText)findViewById(R.id.photo_description)).getText().toString();
 				try {
-					System.out.println("======picdetail try");
-					insertData(db, description, photoname, loclati, loclong,locationString);
+					SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd   hh:mm:ss");   
+				    String date = sDateFormat.format(new java.util.Date());
+				    System.out.println("==========time:"+date);
+					insertData(db, description, photoname, loclati, loclong,locationString,date);
 					System.out.println("======picdetail try");
 					//启动新activity
 	    			Intent intent = new Intent();
@@ -149,12 +153,14 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 				}
 				catch(SQLException e) {
 					System.out.println("======picdetail catch");
+					SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");   
+				    String date = sDateFormat.format(new java.util.Date());					
 					db.execSQL("create table pic_info(_id integer primary key autoincrement,tour_id integer," +
 								"photo_time date," +
 								"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 								"photo_loclongi int,photo_place varchar(100)," +
 								"photo_path varchar(150))");
-					insertData(db, description, photoname, loclati, loclong,locationString);
+					insertData(db, description, photoname, loclati, loclong,locationString,date);
 					//启动新activity
 	    			Intent intent = new Intent();
 	    			intent.setClass(PicDetail.this, PhotoList.class);
@@ -242,14 +248,14 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 	
 	//数据库模块=======================================================================
 
-	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi,String place){
+	private void insertData(SQLiteDatabase db,String description,String path,String lati,String longi,String place,String date){
 		Cursor cur;
 		cur=db.rawQuery("select * from trip_list order by _id desc limit 0,1", null);
 		System.out.println("=========cur:"+cur);
 		cur.moveToPosition(0);
 		String index=cur.getString(0);//选择最后一个旅程的旅程id
 		System.out.println("=========indexxxxx:"+index);
-		db.execSQL("insert into pic_info values (null,"+index+",null,?,null,?,?,?,?)",new String[] {description,lati,longi,place,path});
+		db.execSQL("insert into pic_info values (null,"+index+",?,?,null,?,?,?,?)",new String[] {date,description,lati,longi,place,path});
 	}
 	
 	//语音识别模块======================================================================
