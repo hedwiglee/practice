@@ -2,10 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="20dp" 
     android:background="#e9e3c9" >
 
     <!-- Button
@@ -32,12 +30,14 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="15dp" 
-        android:textSize="18sp"
-        android:textColor="#797979"/>
+        android:textSize="20sp"
+        android:textStyle="bold" 
+        android:textColor="#393939"
+        android:text="默认"/>
     
     <ListView
         android:id="@+id/tripshow_list"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tripshow_travelname"
         android:layout_alignLeft="@+id/tripshow_travelname"
@@ -46,5 +46,14 @@
         android:divider="#e9e3c9">
     </ListView>
 
+    <TextView
+        android:id="@+id/tripshow_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tripshow_travelname"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/tripshow_travelname"
+        android:textColor="#797979"
+        android:text="TextView" />
 
 </RelativeLayout>

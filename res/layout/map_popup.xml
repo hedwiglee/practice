@@ -16,12 +16,13 @@
              android:id="@+id/popright"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:background="@drawable/popup_side"
+             android:background="#209e85"
              android:layout_below="@id/pop_photo"
              android:gravity="center"
              android:text="更新marker"
-             android:textColor="#3814ed"
+             android:textColor="#fff"
              android:textSize="12sp"
+             android:padding="2dp"
              android:textStyle="bold" />
 
          <TextView

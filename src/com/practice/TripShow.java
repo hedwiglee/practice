@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class TripShow extends Activity {
 	//Button endTripButton;
 	TextView tripNameTextView;
+	TextView timeTextView;
 	//TextView tripoverTextView;
 	String tripname;
 	SQLiteDatabase db;
@@ -50,8 +51,12 @@ public class TripShow extends Activity {
 		//获取该_id对应的旅程名称，并写到textview
 		cursor.moveToFirst();
 		String valueString=cursor.getString(cursor.getColumnIndex("trip_name"));
+		String timeString="|  "+cursor.getString(cursor.getColumnIndex("start_time"))+"-"
+						+cursor.getString(cursor.getColumnIndex("end_time"));
 		tripNameTextView=(TextView)findViewById(R.id.tripshow_travelname);
+		timeTextView=(TextView)findViewById(R.id.tripshow_time);
 		tripNameTextView.setText(valueString.toCharArray(), 0, valueString.length());
+		timeTextView.setText(timeString.toCharArray(), 0, timeString.length());
 		/*String isoverString=cursor.getString(cursor.getColumnIndex("is_over"));
 		tripoverTextView=(TextView)findViewById(R.id.tripshow_isover_text);
 		tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());	*/	

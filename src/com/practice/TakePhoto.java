@@ -1,10 +1,17 @@
 package com.practice;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +25,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
+import android.hardware.Camera.Size;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -173,8 +181,14 @@ public class TakePhoto extends Activity implements SensorEventListener{
 				parameters.setPictureFormat(ImageFormat.JPEG);
 				parameters.set("jpeg-quality", 85);
 				//设置预览照片大小
-				parameters.setPreviewSize(480, 320);
-				parameters.setPictureSize(1280, 960);	
+				parameters.setPreviewSize(960, 720);	
+				parameters.setPictureSize(1280, 800);
+				/*int[] size=new int[2];
+				size=getSizes(parameters);			
+				parameters.setPictureSize(size[0], size[1]);*/
+				getSizes(parameters);
+				getpreSizes(parameters);
+				//camera.setParameters(parameters);
 				
 				//通过surfaceview显示取景画面
 				camera.setPreviewDisplay(sHolder);
@@ -199,15 +213,15 @@ public class TakePhoto extends Activity implements SensorEventListener{
 				Bitmap b2 = Bitmap.createBitmap(b, 0, 0, b.getWidth(),
 				b.getHeight(), m, true);
 				if (b != b2) {
-				b.recycle(); // Android开发网再次提示Bitmap操作完应该显示的释放
+				b.recycle(); // Bitmap操作完应该显示的释放
 				b = b2;
 				}
 			} 
 			catch (OutOfMemoryError ex) {
-			// Android123建议大家如何出现了内存不足异常，最好return 原始的bitmap对象。.
+			// 出现了内存不足异常，最好return 原始的bitmap对象
 			}
 		}
-		b=decodeBitmap(b,2);
+		//b=compressImage(b);
 		return b;
 	}
 		
@@ -241,7 +255,7 @@ public class TakePhoto extends Activity implements SensorEventListener{
 	PictureCallback myJpegCallback=new PictureCallback() {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			// TODO Auto-generated method stub
+			// 拍照时
 			//根据所拍数据创建位图
 			final Bitmap bm=BitmapFactory.decodeByteArray(data, 0, data.length);
 			switch (mobileOrientation) {
@@ -285,7 +299,11 @@ public class TakePhoto extends Activity implements SensorEventListener{
 		    			intent.setClass(TakePhoto.this, PicDetail.class);
 		    	        Bundle bundle = new Bundle();
 		    	        bundle.putString("picPath", file.getPath());
+		    	        bundle.putString("picName", picname);
+		    	        bundle.putString("filePath", path+"/CameraPractice");
 		    	        intent.putExtra("picPath",file.getPath());
+		    	        intent.putExtra("picName",picname);
+		    	        intent.putExtra("filePath",path+"/CameraPractice");
 		    			startActivity(intent);
 					}
 					catch (IOException e){
@@ -335,4 +353,67 @@ public class TakePhoto extends Activity implements SensorEventListener{
 		System.out.println("缩略图高度：" + h + "宽度:" + w);
 		return bitmap;
 	}
+	
+	private static Bitmap compressImage(Bitmap image) {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+		int options = 100;
+		while ( baos.toByteArray().length / 1024>300) {	//循环判断如果压缩后图片是否大于100kb,大于继续压缩		
+			baos.reset();//重置baos即清空baos
+			image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+			options -= 10;//每次都减少10
+		}
+		ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+		Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+		return bitmap;
+	}
+	
+	//获取所有的图片支持尺寸
+	private static void getSizes(Camera.Parameters parameters){
+		int[] out=new int[2];
+		List psizelist = parameters.getSupportedPictureSizes();
+        if (null != psizelist && 0 < psizelist.size()) {
+                int heights[] = new int[psizelist.size()];
+                Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+                for (int i = 0; i < psizelist.size(); i++) {
+                        Size size = (Size) psizelist.get(i);
+                        int sizehieght = size.height;
+                        int sizewidth = size.width;
+                        heights[i] = sizehieght;
+                        map.put(sizehieght, sizewidth);
+                        System.out.println("@@支持图片尺寸 宽"+sizewidth+" 高 "+sizehieght);
+                }
+                Arrays.sort(heights);// 取最小尺寸
+                parameters.setPictureSize(heights[0], map.get(heights[0]));
+                out[0]=heights[0];
+                out[1]=map.get(heights[0]);
+                System.out.println("@@最小尺寸 宽"+out[0]+" 高 "+out[1]);
+        }
+        //return out;
+	}
+	
+	//获取所有的预览尺寸
+		private static void getpreSizes(Camera.Parameters parameters){
+			int[] out=new int[2];
+			List psizelist = parameters.getSupportedPreviewSizes();
+	        if (null != psizelist && 0 < psizelist.size()) {
+	                int heights[] = new int[psizelist.size()];
+	                Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+	                for (int i = 0; i < psizelist.size(); i++) {
+	                        Size size = (Size) psizelist.get(i);
+	                        int sizehieght = size.height;
+	                        int sizewidth = size.width;
+	                        heights[i] = sizehieght;
+	                        map.put(sizehieght, sizewidth);
+	                        System.out.println("@@支持预览尺寸 宽"+sizewidth+" 高 "+sizehieght);
+	                }
+	                Arrays.sort(heights);// 取最小尺寸
+	                parameters.setPictureSize(heights[0], map.get(heights[0]));
+	                out[0]=heights[0];
+	                out[1]=map.get(heights[0]);
+	                System.out.println("@@最小尺寸 宽"+out[0]+" 高 "+out[1]);
+	        }
+	        //return out;
+		}
 }

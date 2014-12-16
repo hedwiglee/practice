@@ -3,6 +3,7 @@ package com.practice;
 import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +45,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.text.format.Time;
 import android.util.Log;
@@ -66,7 +68,9 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 	private ImageView photoview;
 	SQLiteDatabase db;
 	Button saveBtn;
-	String photoname;
+	String photopath;//图片路径
+	String picname;//图片名称
+	String filepath;//文件路径
 	//语音识别相关
 	private static final String KWS_SEARCH = "火车";
     private static final String FORECAST_SEARCH = "forecast";
@@ -122,11 +126,26 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		//***********************显示图片****************************
 		photoview = (ImageView) findViewById(R.id.thumbnail);
 		Intent camIntent=this.getIntent();
-		photoname=camIntent.getStringExtra("picPath");
+		photopath=camIntent.getStringExtra("picPath");
+		picname=camIntent.getStringExtra("picName");
+		filepath=camIntent.getStringExtra("filePath");
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4;
-        Bitmap bm = BitmapFactory.decodeFile(photoname, options);
-        System.out.println("========pic detail photopath:"+photoname);
+        Bitmap bm = BitmapFactory.decodeFile(photopath, options);
+        System.out.println("~~~~~~~"+bm.getHeight());
+        
+        File file=new File(filepath,picname);
+		FileOutputStream outStream=null;
+		try {
+			outStream=new FileOutputStream(file);
+			bm.compress(CompressFormat.JPEG, 100, outStream);
+			outStream.close();						
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
+			
+        System.out.println("========pic detail photopath:"+photopath);
         photoview.setImageBitmap(bm);
         //***********************数据库操作**********************
         File filepath=new File(Environment.getExternalStorageDirectory().toString()+"/CameraPractice/database");
@@ -144,7 +163,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 					SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd   hh:mm:ss");   
 				    String date = sDateFormat.format(new java.util.Date());
 				    System.out.println("==========time:"+date);
-					insertData(db, description, photoname, loclati, loclong,locationString,date);
+					insertData(db, description, photopath, loclati, loclong,locationString,date);
 					System.out.println("======picdetail try");
 					//启动新activity
 	    			Intent intent = new Intent();
@@ -160,7 +179,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 								"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 								"photo_loclongi int,photo_place varchar(100)," +
 								"photo_path varchar(150))");
-					insertData(db, description, photoname, loclati, loclong,locationString,date);
+					insertData(db, description, photopath, loclati, loclong,locationString,date);
 					//启动新activity
 	    			Intent intent = new Intent();
 	    			intent.setClass(PicDetail.this, PhotoList.class);
@@ -445,6 +464,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
         // MKAddrInfo 地址信息类
         @Override
         public void onGetAddrResult(MKAddrInfo res, int error) {
+			System.out.println("************getresult:");
             if (error != 0) {
                 String msg = String.format("错误号：%d ", error);
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT)

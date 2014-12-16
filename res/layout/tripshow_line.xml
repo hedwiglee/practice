@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/tripshow_pic"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_centerHorizontal="true"
@@ -15,20 +15,33 @@
 
     <TextView
         android:id="@+id/tripshow_pic_description"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tripshow_pic"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="15dp" 
-        android:text="description" />
+        android:text="description" />    
 
-    <TextView
-        android:id="@+id/tripshow_pic_time"
+    <ImageView
+        android:id="@+id/tripshow_clock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tripshow_pic_description"
         android:layout_below="@+id/tripshow_pic_description"
         android:layout_marginTop="5dp"
+        android:paddingBottom="2dp"
+        android:src="@drawable/clock" />
+    
+    <TextView
+        android:id="@+id/tripshow_pic_time"
+        android:textSize="10sp"
+        android:textColor="#4a4a48"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tripshow_clock"
+        android:layout_toRightOf="@+id/tripshow_clock"
+        android:layout_marginLeft="3dp"
         android:text="time" />
 
     <!-- TextView
@@ -52,7 +65,7 @@
         android:layout_toRightOf="@+id/tripshow_pic_time"
         android:layout_marginLeft="20dp"
         android:text="loc"
-        android:textColor="#5c9425"
+        android:textColor="#209e85"
         android:textSize="5pt"
         android:textStyle="italic" />
 
