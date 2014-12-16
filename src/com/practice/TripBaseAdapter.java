@@ -83,7 +83,9 @@ public class TripBaseAdapter extends BaseAdapter{
 		viewholder.longiTextView.setText(Integer.parseInt(cursor.getString(6))*1E-6+"");*/
 		viewholder.photoImageView.setTag(cursor.getString(8));
 		viewholder.latiTextView.setText(cursor.getString(7));
-		new ImageAsynctask(viewholder.photoImageView, cursor.getString(8), viewholder).execute();
+		//new ImageAsynctask(viewholder.photoImageView, cursor.getString(8), viewholder).execute();
+		Bitmap bm = decodeBitmap(cursor.getString(8));
+        viewholder.photoImageView.setImageBitmap(bm);
 		return convertView;
 	}
 		
