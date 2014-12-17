@@ -382,13 +382,13 @@ public class TakePhoto extends Activity implements SensorEventListener{
                         int sizewidth = size.width;
                         heights[i] = sizehieght;
                         map.put(sizehieght, sizewidth);
-                        System.out.println("@@支持图片尺寸 宽"+sizewidth+" 高 "+sizehieght);
+                        //System.out.println("@@支持图片尺寸 宽"+sizewidth+" 高 "+sizehieght);
                 }
                 Arrays.sort(heights);// 取最小尺寸
                 parameters.setPictureSize(heights[0], map.get(heights[0]));
                 out[0]=heights[0];
                 out[1]=map.get(heights[0]);
-                System.out.println("@@最小尺寸 宽"+out[0]+" 高 "+out[1]);
+                //System.out.println("@@最小尺寸 宽"+out[0]+" 高 "+out[1]);
         }
         //return out;
 	}
@@ -406,13 +406,13 @@ public class TakePhoto extends Activity implements SensorEventListener{
 	                        int sizewidth = size.width;
 	                        heights[i] = sizehieght;
 	                        map.put(sizehieght, sizewidth);
-	                        System.out.println("@@支持预览尺寸 宽"+sizewidth+" 高 "+sizehieght);
+	                        //System.out.println("@@支持预览尺寸 宽"+sizewidth+" 高 "+sizehieght);
 	                }
 	                Arrays.sort(heights);// 取最小尺寸
 	                parameters.setPictureSize(heights[0], map.get(heights[0]));
 	                out[0]=heights[0];
 	                out[1]=map.get(heights[0]);
-	                System.out.println("@@最小尺寸 宽"+out[0]+" 高 "+out[1]);
+	                //System.out.println("@@最小尺寸 宽"+out[0]+" 高 "+out[1]);
 	        }
 	        //return out;
 		}

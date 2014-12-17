@@ -132,7 +132,6 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4;
         Bitmap bm = BitmapFactory.decodeFile(photopath, options);
-        System.out.println("~~~~~~~"+bm.getHeight());
         
         File file=new File(filepath,picname);
 		FileOutputStream outStream=null;
