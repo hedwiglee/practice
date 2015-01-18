@@ -1,13 +1,5 @@
 models/grammar/digits.gram
 models/grammar/menu.gram
-models/hmm/en-us-semi/README
-models/hmm/en-us-semi/feat.params
-models/hmm/en-us-semi/mdef
-models/hmm/en-us-semi/means
-models/hmm/en-us-semi/noisedict
-models/hmm/en-us-semi/sendump
-models/hmm/en-us-semi/transition_matrices
-models/hmm/en-us-semi/variances
 models/hmm/tdt_sc_8k/feat.params
 models/hmm/tdt_sc_8k/mdef
 models/hmm/tdt_sc_8k/means
@@ -15,11 +7,5 @@ models/hmm/tdt_sc_8k/noisedict
 models/hmm/tdt_sc_8k/sendump
 models/hmm/tdt_sc_8k/transition_matrices
 models/hmm/tdt_sc_8k/variances
-models/kws/all_regular_kws.txt
-models/lm/all_regular_words.dic
 models/kws/50_regular_kws.txt
 models/lm/50_regular_words.dic
-models/kws/20_regular_kws.txt
-models/lm/20_regular_words.dic
-models/lm/cmu07a.dic
-models/lm/weather.dmp

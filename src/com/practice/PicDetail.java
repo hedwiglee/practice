@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 
 import com.baidu.location.BDLocation;
@@ -47,7 +46,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -231,10 +229,13 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
             @Override
             protected Exception doInBackground(Void... params) {
                 try {
+                	System.out.println("=========进入异步语音初始化任务");
                     Assets assets = new Assets(PicDetail.this);
-                    File assetDir = assets.syncAssets();                 
+                    File assetDir = assets.syncAssets();        
+                	System.out.println("=========初始化assets");         
                     setupRecognizer(assetDir);
                 } catch (IOException e) {
+                	System.out.println("=========不能准备语音素材 "+e);
                     return e;
                 }
                 return null;
@@ -313,6 +314,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
     }
 
     private void setupRecognizer(File assetsDir) {
+    	System.out.println("=========setupRecognizer");
         File modelsDir = new File(assetsDir, "models");
         recognizer = defaultSetup()
                 .setAcousticModel(new File(modelsDir, "hmm/tdt_sc_8k"))
@@ -331,12 +333,14 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		case MotionEvent.ACTION_DOWN:
 			onBeginningOfSpeech();
 			startButton.setText("结束识别");
-			switchSearch(KWS_SEARCH);
+			switchSearch(KWS_SEARCH);			
+			System.out.println("无法开始识别");
 			break;
 		case MotionEvent.ACTION_UP:
 			onEndOfSpeech();
 			startButton.setText("开始识别");
-			recognizer.stop();
+			recognizer.stop();			
+			System.out.println("无法结束识别");
 			break;
 		default:
 			;
@@ -537,7 +541,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
     
     @Override
 	public void onResume() {
-        mMapView.onResume();
+       mMapView.onResume();
        super.onResume();
        System.out.println("======onResume");
     }
