@@ -82,6 +82,7 @@ public class TripBaseAdapter extends BaseAdapter{
 		System.out.println("========latinum"+Integer.parseInt(cursor.getString(5))*1E-6+"");
 		viewholder.longiTextView.setText(Integer.parseInt(cursor.getString(6))*1E-6+"");*/
 		viewholder.photoImageView.setTag(cursor.getString(8));
+		System.out.println("tripshow中的图片路径："+cursor.getString(8));
 		viewholder.latiTextView.setText(cursor.getString(7));
 		//new ImageAsynctask(viewholder.photoImageView, cursor.getString(8), viewholder).execute();
 		//Bitmap bm = decodeBitmap(cursor.getString(8));

@@ -57,25 +57,6 @@ public class TripShow extends Activity {
 		timeTextView=(TextView)findViewById(R.id.tripshow_time);
 		tripNameTextView.setText(valueString.toCharArray(), 0, valueString.length());
 		timeTextView.setText(timeString.toCharArray(), 0, timeString.length());
-		/*String isoverString=cursor.getString(cursor.getColumnIndex("is_over"));
-		tripoverTextView=(TextView)findViewById(R.id.tripshow_isover_text);
-		tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());	*/	
-		
-		//结束旅程按钮
-		/*endTripButton=(Button)findViewById(R.id.end_trip_btn);
-		endTripButton.setOnClickListener(new OnClickListener() {			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				db.execSQL("update trip_list set is_over=1 where _id="+tripname);
-				isoverCursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
-				isoverCursor.moveToFirst();
-				String isoverString=isoverCursor.getString(isoverCursor.getColumnIndex("is_over"));
-				System.out.println("isover:"+isoverString);
-				tripoverTextView=(TextView)findViewById(R.id.tripshow_isover_text);
-				tripoverTextView.setText(isoverString.toCharArray(), 0, isoverString.length());
-			}
-		});*/
 		
 		list=(ListView)findViewById(R.id.tripshow_list);
 		
@@ -92,17 +73,6 @@ public class TripShow extends Activity {
 			cursor=db.rawQuery("select * from pic_info where integer="+tripname, null);
 		}		
 		System.out.println(cursor.getCount());
-		/*String[] title={"pic_description"};
-		int[] r_id={R.id.tripshow_pic_description};*/
-
-		//将cursor里面的内容赋给List
-        /*List<Trip> trips = new ArrayList<Trip>();
-		while(cursor.moveToNext()) {
-            Trip aTrip=new Trip(cursor.getString(3),cursor.getString(6));
-    		if (aTrip!=null) {
-    			trips.add(aTrip);
-    		}
-        }*/
 		System.out.println("========before tripshow");
 		TripBaseAdapter tripBaseAdapter=new TripBaseAdapter(this, list, cursor);
 		System.out.println("========after new a tripadapter");

@@ -38,7 +38,6 @@ public class TripList extends Fragment {
 	DatabaseFunc dbaseFunc;
 	Cursor cursor;
 	static public String tripName;
-	private SimpleAdapter adapter;
 	private View v;
 	int PHOTO=1;
 	String choosepic=null;	//在本地浏览图片时所选图片的路径
@@ -63,7 +62,7 @@ public class TripList extends Fragment {
 		db=SQLiteDatabase.openOrCreateDatabase(filepath+"/travelbook.db3", null);
 		
 		try {
-			cursor=db.rawQuery("select * from trip_list order by _id desc", null);
+			cursor=db.rawQuery("select * from trip_list order by _id desc", null);			
 		}
 		catch (Exception e) {
 			db.execSQL("create table trip_list(_id integer primary key autoincrement,trip_name varchar(40)," +
@@ -72,12 +71,6 @@ public class TripList extends Fragment {
 					"keyword varchar(255),photo_nums integer,trip_location varchar(100),is_over integer)");
 			cursor=db.rawQuery("select * from trip_list order by _id desc", null);
 		}
-		/*String[] title={"_id","trip_name","start_time","end_time","keyword"};
-		int[] r_id={R.id.triplist_id_hidden,R.id.triplist_title_text,R.id.triplist_starttime_text,
-				R.id.triplist_endtime_text,R.id.triplist_keyword_text};
-        adapter = new SimpleAdapter(getActivity(), getData(cursor), R.layout.triplist_line, title, r_id); 
-        list.setAdapter(adapter);  
-        System.out.println("triplist:set adapter");*/
         
         ListBaseAdapter tripBaseAdapter=new ListBaseAdapter(getActivity(), list, cursor);
 		list.setAdapter(tripBaseAdapter);
@@ -100,7 +93,6 @@ public class TripList extends Fragment {
 			}
 		});
 
-		int longclickindex;
 		//列表长按修改旅程缩略图事件
 		list.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
@@ -133,6 +125,7 @@ public class TripList extends Fragment {
 		return v;
 	 }
 	
+	//将cursor的结果转换为map数据
 	private List<? extends Map<String, ?>> getData(Cursor result) {  
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
         while (result.moveToNext()) {
@@ -182,14 +175,6 @@ public class TripList extends Fragment {
     	return fileName;
     }
 	
-	private String getFileName(String absPath)
-    {
-    	
-    	String[] result=absPath.split("/");
-    	int length=result.length;
-    	return result[length-1];    	
-    }
-	
     @Override  
     public void onActivityCreated(Bundle savedInstanceState) {  
     	System.out.println("enter onactivity");
@@ -205,18 +190,18 @@ public class TripList extends Fragment {
 		if( requestCode == PHOTO && resultCode==android.app.Activity.RESULT_OK){
 			Uri uri = data.getData();
 			Log.e("uri", uri.toString());			
-			choosepic=getRealPath(uri);
-			
+			choosepic=getRealPath(uri);			
 			try {
 				System.out.println("update trip_list set thumbnail_photo=\""+choosepic+"\" where _id="+choosePicId);
-				cursor=db.rawQuery("update trip_list set thumbnail_photo="+choosepic+" where _id="+choosePicId, null);
+				db.execSQL("update trip_list set thumbnail_photo=\""+choosepic+"\" where _id="+choosePicId);
+				//cursor=db.rawQuery("update trip_list set thumbnail_photo=\"/mnt/ext_sdcard/CameraPractice/20150116_101412.jpg\" where _id=2", null);
 			}
 			catch (Exception e) {
 				db.execSQL("create table trip_list(_id integer primary key autoincrement,trip_name varchar(40)," +
 						"start_time date,end_time date," +
 						"user_id varchar(20),participate varchar(100),thumbnail_photo varchar(100)," +
 						"keyword varchar(255),photo_nums integer,trip_location varchar(100),is_over integer)");
-				cursor=db.rawQuery("update trip_list set thumbnail_photo="+choosepic+" where _id="+choosePicId, null);
+				db.execSQL("update trip_list set thumbnail_photo=\""+choosepic+"\" where _id="+choosePicId);
 			}
 		}
 		
