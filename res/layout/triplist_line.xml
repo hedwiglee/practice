@@ -12,7 +12,8 @@
     	android:layout_marginTop="0dp"
     	android:layout_marginLeft="0dp"
         android:background="#e47560"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true" 
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/before_title_img"

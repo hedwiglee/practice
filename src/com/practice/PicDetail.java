@@ -164,7 +164,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 					System.out.println("======picdetail try");
 					//启动新activity
 	    			Intent intent = new Intent();
-	    			intent.setClass(PicDetail.this, PhotoList.class);
+	    			intent.setClass(PicDetail.this, Main.class);
 	    			startActivity(intent);
 				}
 				catch(SQLException e) {
