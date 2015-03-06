@@ -22,7 +22,7 @@ public class Main extends FragmentActivity implements ActionBar.TabListener{
 		
 		actionBar.addTab(actionBar.newTab().setText("地图").setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText("游记").setTabListener(this));
-		actionBar.addTab(actionBar.newTab().setText("探索").setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("设置").setTabListener(this));
 		setContentView(R.layout.main);
 	}
 

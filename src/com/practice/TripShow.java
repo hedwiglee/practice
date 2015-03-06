@@ -44,7 +44,7 @@ public class TripShow extends Activity {
 					"photo_time date," +  
 					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 					"photo_loclongi int,photo_place varchar(100)," +
-					"photo_path varchar(150))");
+					"photo_path varchar(150),pic_type varchar(30))");
 			cursor=db.rawQuery("select * from trip_list where _id="+tripname, null);
 		}
 		

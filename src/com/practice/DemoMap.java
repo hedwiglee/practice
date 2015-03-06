@@ -63,7 +63,7 @@ public class DemoMap extends Application {
             if (iError != 0) {
                 //授权Key错误：
                 Toast.makeText(DemoMap.getInstance().getApplicationContext(), 
-                        "请在 DemoMap.java文件输入正确的授权Key,并检查您的网络连接是否正常！error: "+iError, Toast.LENGTH_LONG).show();
+                        "请检查网络状况", Toast.LENGTH_LONG).show();
                 DemoMap.getInstance().m_bKeyRight = false;
             }
             else{

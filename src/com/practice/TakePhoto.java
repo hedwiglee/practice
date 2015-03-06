@@ -278,7 +278,7 @@ public class TakePhoto extends Activity implements SensorEventListener{
 			View saveDialog=getLayoutInflater().inflate(R.layout.save, null);
 			//用时间为图片命名
 			final String picname = DateFormat.format("yyyyMMdd_hhmmss",Calendar.getInstance(Locale.CHINA)) + ".jpg";
-			new AlertDialog.Builder(TakePhoto.this).setView(saveDialog)
+			new AlertDialog.Builder(TakePhoto.this).setView(saveDialog).setMessage("是否保存图片？")
 					.setPositiveButton("保存", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {

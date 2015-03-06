@@ -4,12 +4,24 @@
     android:layout_height="match_parent" 
     android:background="#ffffff">
 
-    <ImageView
+    <!-- <ImageView
         android:id="@+id/tripshow_pic"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_centerHorizontal="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_launcher" /> -->
+    
+    <ImageView
+        android:id="@+id/tripshow_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:maxHeight="300dip"
+        android:maxWidth="480dip"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" />
 

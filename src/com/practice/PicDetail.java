@@ -175,7 +175,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 								"photo_time date," +
 								"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
 								"photo_loclongi int,photo_place varchar(100)," +
-								"photo_path varchar(150))");
+								"photo_path varchar(150),pic_type varchar(30))");
 					insertData(db, description, photopath, loclati, loclong,locationString,date);
 					//启动新activity
 	    			Intent intent = new Intent();
@@ -274,7 +274,7 @@ public class PicDetail extends Activity implements OnTouchListener,RecognitionLi
 		cur.moveToPosition(0);
 		String index=cur.getString(0);//选择最后一个旅程的旅程id
 		System.out.println("=========indexxxxx:"+index);
-		db.execSQL("insert into pic_info values (null,"+index+",?,?,null,?,?,?,?)",new String[] {date,description,lati,longi,place,path});
+		db.execSQL("insert into pic_info values (null,"+index+",?,?,null,?,?,?,?,null)",new String[] {date,description,lati,longi,place,path});
 	}
 	
 	//语音识别模块======================================================================

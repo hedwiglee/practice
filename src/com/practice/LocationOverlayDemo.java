@@ -204,8 +204,7 @@ public class LocationOverlayDemo extends Fragment {
         @Override
         public void onReceiveLocation(BDLocation location) {
             if (location == null)
-                return ;
-            
+                return ;            
             locData.latitude = location.getLatitude();
             locData.longitude = location.getLongitude();
             //如果不显示定位精度圈，将accuracy赋值为0即可
@@ -335,7 +334,7 @@ public class LocationOverlayDemo extends Fragment {
  					"photo_time date," +
  					"pic_description varchar(255),photo_keyword varchar(255),photo_loclati int," +
  					"photo_loclongi int,photo_place varchar(100)," +
- 					"photo_path varchar(150))");
+ 					"photo_path varchar(150),pic_type varchar(30))");
  			cursor=db.rawQuery("select * from pic_info", null);
  	    	System.out.println("进入了catch");
  		}

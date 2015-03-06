@@ -205,6 +205,5 @@ public class TripList extends Fragment {
 			}
 		}
 		
-		
 	}
 }
